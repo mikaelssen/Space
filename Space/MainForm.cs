@@ -36,5 +36,10 @@ namespace Space
 		{
 			Game.NewGame();
 		}
+
+		private void loadGameToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Game.LoadGame();
+		}
 	}
 }

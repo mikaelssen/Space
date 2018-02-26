@@ -42,7 +42,7 @@ namespace Space.Objects
 			var col = liteDB.GetCollection<SolarSystem>("systems");
 			Systems = col.FindAll().ToList();
 
-			Debug.WriteLine(col.Count());
+			Debug.WriteLine($"Loaded systems {col.Count()}");
 			
 		}
 
@@ -52,23 +52,63 @@ namespace Space.Objects
 			col.Update(systems);
 		}
 
-		//Generation of systems
+		internal static void Update(int simticks = 5, int RenderSize = 10000)
+		{
+			foreach (var Sys in systems)
+			{
+				for (int i = 1; i <= simticks; i++)
+				{
+					foreach (var planet in Sys.Planets)
+					{
+						double bearing = planet.Bearing;
+						double velocity = planet.Velocity;
+						double orbit = planet.DistanceFromStar;
+						byte direction = planet.OrbialDirection;
+
+						double circumference = (2 * orbit * Math.PI);
+						
+						bearing = (bearing + (((circumference * (velocity / 8000000)) / circumference) * 360));
+						if (bearing > 360) { bearing = bearing - 360; }
+						planet.Bearing = bearing;
+
+						planet.Position[0] = (float)(RenderSize / 2 - orbit * Math.Sin(bearing * (Math.PI / 180.0))); //x
+						planet.Position[1] = (float)(RenderSize / 2 - orbit * Math.Cos(bearing * (Math.PI / 180.0))); //y
+
+						
+					}
+				}
+				Console.WriteLine(Sys.Planets[0].Position[0]);
+			}
+			
+		}
+	
+		/// <summary>
+		/// Generation of systems
+		/// TODO move this function to a sensible place
+		/// </summary>
+		/// <returns>System</returns>
 		private static SolarSystem NewSystem()
 		{
 
 			SolarSystem system = new SolarSystem();
-			
+
+			//Star generation
+			system.Star = new Star();
+
 			//planet generation
-			for (int i = 0; i < rng.Next(4,10); i++)
+			for (int i = 0; i < rng.Next(4, 10); i++)
 			{
 				//planet
 				Planet planet = new Planet
 				{
 					Name = Names.GetRandomName(),
-					Position = new int[] { rng.Next(3, 1000), rng.Next(3, 1000) },
 					Size = rng.Next(400, 7000),
-					Resources = new List<Resource>()
+					Resources = new List<Resource>(),
+					Bearing = RandomRange(0, 360),
+					DistanceFromStar =  RandomRange(2, 10),
 				};
+				//this one is special, leave outside initial generation
+				planet.Velocity = Math.Sqrt((6.67408 / 2) * (system.Star.Mass * 10000000) * (2 / planet.DistanceFromStar));
 
 				//moons
 				List<Moon> moonsperplanet = new List<Moon>();
@@ -83,9 +123,10 @@ namespace Space.Objects
 					moonsperplanet.Add(moon);
 				}
 				planet.Moons.AddRange(moonsperplanet); //add moons to planet
-
+			
 				system.Planets.Add(planet);
 			}
+
 
 			//asteroid generation
 			for (int i = 0; i < rng.Next(100,300); i++)
@@ -102,7 +143,11 @@ namespace Space.Objects
 			return system;
 		}
 
-		//Generate a jump point between Sys A and Sys B
+		/// <summary>
+		/// Generate a jump point between Sys A and Sys B
+		/// </summary>
+		/// <param name="a">Starting System</param>
+		/// <param name="b">Ending System</param>
 		private static void NewJumpoints(SolarSystem a, SolarSystem b)
 		{
 			JumpPoint point = new JumpPoint()
@@ -115,6 +160,14 @@ namespace Space.Objects
 			b.JumpPoints.Add(point);
 		}
 
+		public static int RandomRange(int min, int max)
+		{
+			return Math.Abs(rng.Next() * (max - min) + min);
+		}
 
+		public static double RandomRange(double min, double max)
+		{
+			return Math.Abs(rng.NextDouble() * (max - min) + min);
+		}
 	}
 }

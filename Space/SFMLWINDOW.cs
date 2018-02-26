@@ -36,6 +36,7 @@ class SFMLWindow
 		renderwindow = new RenderWindow(rendersurface.Handle); // creates our SFML RenderWindow on our surface control
 		//set view
 		view = renderwindow.GetView();
+		view.Center = new Vector2f(0,0);
 		//event handler for keys
 		renderwindow.KeyPressed += Renderwindow_KeyPressed;
 		//TODO make sure that the window is selected properly, as it won't allow for movement if it's not. BUG
@@ -46,11 +47,12 @@ class SFMLWindow
 			System.Windows.Forms.Application.DoEvents(); // handle form events
 			renderwindow.DispatchEvents(); // handle SFML events - NOTE this is still required when SFML is hosted in another window
 			renderwindow.Clear(Color.Black); // clear our SFML RenderWindow
-
+			Game.Update();
 			Draw();
 			renderwindow.Display(); // display what SFML has drawn to the screen
 		}
 	}
+	
 
 	private void Form_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
 	{
@@ -94,22 +96,21 @@ class SFMLWindow
 			Game.NewGame();
 		}
 		SolarSystem sys = Game.Systems[0];
-
 		foreach (var planet in sys.Planets)
 		{
-			renderwindow.Draw(new CircleShape(4, 8)
-			{ FillColor = Color.Cyan, Position = new Vector2f(planet.Position[0], planet.Position[1]) });
-			foreach (var moon in planet.Moons)
+			renderwindow.Draw(new CircleShape(2, 20)
+			{ FillColor = Color.Red, Position = new Vector2f(planet.Position[0], planet.Position[1]) });
+			/*foreach (var moon in planet.Moons)
 			{
 				renderwindow.Draw(new CircleShape(4, 8)
 					{ FillColor = Color.Red, Position = new Vector2f(moon.Position[0], moon.Position[1]) });
-			}
+			}*/
 		}
-		foreach (var asteroid in sys.Asteroids)
+		/*foreach (var asteroid in sys.Asteroids)
 		{
 			renderwindow.Draw(new CircleShape(2, 8)
 			{ FillColor = Color.Green, Position = new Vector2f(asteroid.Position[0], asteroid.Position[1]) });
-		}
+		}*/
 		
 		
 	}

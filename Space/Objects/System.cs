@@ -96,7 +96,7 @@ namespace Space.Objects
 			Size = 0;
 			Velocity = 30000;
 			Bearing = 5000;
-			DistanceFromStar = Game.RandomRange(200,1000);
+			DistanceFromStar = Game.RandomRange(1,40);
 			Name = string.Empty;
 			Moons = new List<Moon>();
 			OrbialDirection = 1;

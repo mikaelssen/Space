@@ -52,7 +52,7 @@ namespace Space.Objects
 			col.Update(systems);
 		}
 
-		internal static void Update(int simticks = 5, int RenderSize = 10000)
+		internal static void Update(int simticks = 5)
 		{
 			foreach (var Sys in systems)
 			{
@@ -71,13 +71,12 @@ namespace Space.Objects
 						if (bearing > 360) { bearing = bearing - 360; }
 						planet.Bearing = bearing;
 
-						planet.Position[0] = (float)(RenderSize / 2 - orbit * Math.Sin(bearing * (Math.PI / 180.0))); //x
-						planet.Position[1] = (float)(RenderSize / 2 - orbit * Math.Cos(bearing * (Math.PI / 180.0))); //y
+						planet.Position[0] = (float)(orbit * Math.Sin(bearing * (Math.PI / 180.0))); //x
+						planet.Position[1] = (float)(orbit * Math.Cos(bearing * (Math.PI / 180.0))); //y
 
 						
 					}
 				}
-				Console.WriteLine(Sys.Planets[0].Position[0]);
 			}
 			
 		}
@@ -105,7 +104,7 @@ namespace Space.Objects
 					Size = rng.Next(400, 7000),
 					Resources = new List<Resource>(),
 					Bearing = RandomRange(0, 360),
-					DistanceFromStar =  RandomRange(2, 10),
+					DistanceFromStar =  RandomRange(1, 2),
 				};
 				//this one is special, leave outside initial generation
 				planet.Velocity = Math.Sqrt((6.67408 / 2) * (system.Star.Mass * 10000000) * (2 / planet.DistanceFromStar));

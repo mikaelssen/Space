@@ -70,7 +70,7 @@ class SFMLWindow
 
 	private void Renderwindow_KeyPressed(object sender, SFML.Window.KeyEventArgs e)
 	{
-		int speed = 10;
+		int speed = 50;
 		//move the view
 		if (e.Code == Keyboard.Key.A)
 			view.Move(new Vector2f(-speed,  0));
@@ -80,6 +80,8 @@ class SFMLWindow
 			view.Move(new Vector2f( 0, -speed));
 		if (e.Code == Keyboard.Key.S)
 			view.Move(new Vector2f( 0,  speed));
+		if (e.Code == Keyboard.Key.Space)
+			view.Zoom(4);
 
 		//System.Diagnostics.Debug.WriteLine(e.Code.ToString());
 
@@ -88,6 +90,8 @@ class SFMLWindow
 	public void Draw()
 	{
 
+
+		double image_size = 2500;
 		//set view
 		renderwindow.SetView(view);
 		//TODO Only render the one active system 
@@ -96,21 +100,82 @@ class SFMLWindow
 			Game.NewGame();
 		}
 		SolarSystem sys = Game.Systems[0];
+
+		double system_size = 1000;
+		float star_size = 0;
+		float system_scale = 1;
+
+		star_size = sys.Star.Size / 20000;
+
 		foreach (var planet in sys.Planets)
 		{
-			renderwindow.Draw(new CircleShape(2, 20)
-			{ FillColor = Color.Red, Position = new Vector2f(planet.Position[0], planet.Position[1]) });
-			/*foreach (var moon in planet.Moons)
+			if (system_size < planet.DistanceFromStar * 2)
+				system_size = planet.DistanceFromStar * 2;
+		}
+		system_scale = (float)((image_size - 100) / system_size);
+		star_size = (int)(star_size * system_scale);
+
+		renderwindow.Draw(new CircleShape(star_size) {
+			FillColor = Color.Yellow,
+			Radius = star_size,
+			Position = new Vector2f(0,0)
+			
+		});
+
+		foreach (var planet in sys.Planets)
+		{
+
+			double Orbit = planet.DistanceFromStar * system_scale;
+			double Radius = planet.Size * system_scale / 500;
+			double Bearing = planet.Bearing;
+
+
+			//orbit?
+			renderwindow.Draw(new CircleShape((float)Orbit,100)
+			{
+				FillColor = Color.Cyan,
+			});
+			//g.DrawEllipse(new Pen(Color.FromArgb(255, 255, 255, 255)), (int)(view.Size.X / 2 - Orbit), (int)(view.Size.X / 2 - Orbit), (int)Orbit * 2, (int)Orbit * 2);
+
+			double pos_x = (image_size / 2 - Orbit * Math.Sin(Bearing * (Math.PI / 180.0)));
+			double pos_y = (image_size / 2 - Orbit * Math.Cos(Bearing * (Math.PI / 180.0)));
+
+
+			renderwindow.Draw(new CircleShape((float)Radius, 100)
+			{
+				FillColor = Color.Red, Position = new Vector2f((float)pos_x, (float)pos_y)
+			});
+
+			renderwindow.Draw(new CircleShape((float)planet.DistanceFromStar,40)
+			{
+				Position = new Vector2f(0, 0),
+				OutlineColor = Color.Green,
+				FillColor = Color.Transparent,
+				OutlineThickness = 2
+			});
+			foreach (var moon in planet.Moons)
 			{
 				renderwindow.Draw(new CircleShape(4, 8)
 					{ FillColor = Color.Red, Position = new Vector2f(moon.Position[0], moon.Position[1]) });
-			}*/
+			}
+
+			VertexArray line = new VertexArray(PrimitiveType.LinesStrip, 0);
+			line.Append(new Vertex(new Vector2f(planet.Position[0], planet.Position[1])));
+			Console.WriteLine($"x{planet.Position[0]} y{planet.Position[1]}");
+			line.Append(new Vertex(new Vector2f(0,0)));
+
+
+			
+
+			renderwindow.Draw(line);
+
+
 		}
-		/*foreach (var asteroid in sys.Asteroids)
+		foreach (var asteroid in sys.Asteroids)
 		{
 			renderwindow.Draw(new CircleShape(2, 8)
 			{ FillColor = Color.Green, Position = new Vector2f(asteroid.Position[0], asteroid.Position[1]) });
-		}*/
+		}
 		
 		
 	}

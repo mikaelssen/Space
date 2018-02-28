@@ -21,7 +21,6 @@ namespace Space.Objects
 			Systems = new List<SolarSystem>();
 			liteDB.DropCollection("systems");
 			var col = liteDB.GetCollection<SolarSystem>("systems");
-			//col.DropIndex("systems");
 
 			Systems.Add(NewSystem());
 			col.Insert(systems);
@@ -33,7 +32,7 @@ namespace Space.Objects
 					Debug.WriteLine(planet.Name);
 				}
 			}
-			//col.EnsureIndex(x => x.Id);
+			//col.EnsureIndex(x => x.Id); //sets ID to track
 		}
 
 		public static void LoadGame()
@@ -74,7 +73,22 @@ namespace Space.Objects
 						planet.Position[0] = (float)(orbit * Math.Sin(bearing * (Math.PI / 180.0))); //x
 						planet.Position[1] = (float)(orbit * Math.Cos(bearing * (Math.PI / 180.0))); //y
 
-						
+						foreach (var moon in planet.Moons)
+						{
+							double moonbearing = moon.Bearing;
+							double moonvelocity = moon.Velocity;
+							double moonorbit = moon.DistanceFromPlanet;
+							byte moondirection = moon.OrbialDirection;
+
+							double mooncircumference = (2 * orbit * Math.PI);
+
+							moonbearing = (moonbearing + (((mooncircumference * (moonvelocity / 8000000)) / mooncircumference) * 360));
+							if (moonbearing > 360) { moonbearing = moonbearing - 360; }
+							moon.Bearing = moonbearing;
+
+							moon.Position[0] = (float)((moonorbit + planet.Position[0]) * Math.Sin(moonbearing * (Math.PI / 180.0))); //x
+							moon.Position[1] = (float)((moonorbit + planet.Position[1]) * Math.Cos(moonbearing * (Math.PI / 180.0))); //y
+						}
 					}
 				}
 			}
@@ -89,10 +103,10 @@ namespace Space.Objects
 		private static SolarSystem NewSystem()
 		{
 
-			SolarSystem system = new SolarSystem();
-
-			//Star generation
-			system.Star = new Star();
+			SolarSystem system = new SolarSystem
+			{
+				Star = new Star()
+			};
 
 			//planet generation
 			for (int i = 0; i < rng.Next(4, 10); i++)
@@ -106,18 +120,21 @@ namespace Space.Objects
 					Bearing = rng.Next(0, 360),
 				};
 				//this one is special, leave outside initial generation
-				planet.Velocity = Math.Sqrt((6.67408 / 2) * (system.Star.Mass / 2) * (2 / planet.DistanceFromStar));
+				planet.Velocity = 0; // Math.Sqrt((6.67408 / 2) * (system.Star.Mass / 2) * (2 / planet.DistanceFromStar));
 				
 				//moons
 				List<Moon> moonsperplanet = new List<Moon>();
-				for (int m = 0; m < rng.Next(0, 8); m++)
+				for (int m = 0; m < rng.Next(0, 9); m++)
 				{
 					Moon moon = new Moon()
 					{
 						Name = Names.GetRandomName(),
-						Size = (planet.Size % rng.Next(1, 4)) * 40,
-						Position = new int[]{ rng.Next(-5, 5), rng.Next(-5, 5)}
+						Size = (planet.Size / rng.Next(2, 8)),
+						Velocity = Math.Sqrt((6.67408 / 2) * (system.Star.Mass / 2) * (2 / planet.DistanceFromStar)), //leave as planet distance
+						OrbialDirection = (byte)rng.Next(0, 1),
+						Bearing = rng.Next(0, 360)
 					};
+					
 					moonsperplanet.Add(moon);
 				}
 				planet.Moons.AddRange(moonsperplanet); //add moons to planet
@@ -127,7 +144,7 @@ namespace Space.Objects
 
 
 			//asteroid generation
-			for (int i = 0; i < rng.Next(100,300); i++)
+			for (int i = 0; i < rng.Next(100,3000); i++)
 			{
 				Asteroid aster = new Asteroid
 				{

@@ -105,17 +105,25 @@ namespace Space.Objects
 
 	public class Moon
 	{
-		public int[] Position { get; set; }
+		public float[] Position { get; set; }
+		public double DistanceFromPlanet { get; set; }
 		public List<Resource> Resources { get; set; }
 		public int Size { get; set; }
 		public string Name { get; set; }
+		public double Bearing { get; internal set; }
+		public double Velocity { get; internal set; }
+		public byte OrbialDirection { get; internal set; }
 
 		public Moon()
 		{
-			Position = Array.Empty<int>();
+			Position = new float[] { 0, 0 };
 			Resources = new List<Resource>();
+			DistanceFromPlanet = Game.rng.Next(20, 50);
+			Velocity = 30000;
+			Bearing = 5000;
 			Size = 0;
 			Name = string.Empty;
+			OrbialDirection = 1;
 		}
 	}
 

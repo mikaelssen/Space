@@ -89,9 +89,6 @@ class SFMLWindow
 
 	public void Draw()
 	{
-
-
-		double image_size = 5;
 		//set view
 		renderwindow.SetView(view);
 		//TODO Only render the one active system 
@@ -127,10 +124,9 @@ class SFMLWindow
 
 			double Orbit = planet.DistanceFromStar * system_scale;
 			double Radius = planet.Size * system_scale / 500;
-			double Bearing = planet.Bearing;
 			
 			//orbit path
-			renderwindow.Draw(new CircleShape((float)planet.DistanceFromStar, 40)
+			renderwindow.Draw(new CircleShape((float)planet.DistanceFromStar,50)
 			{
 				Position = new Vector2f(0, 0),
 				Origin = new Vector2f((float)planet.DistanceFromStar, (float)planet.DistanceFromStar),
@@ -140,9 +136,8 @@ class SFMLWindow
 			});
 
 			//planet
-			renderwindow.Draw(new CircleShape((float)Radius, 100)
+			renderwindow.Draw(new CircleShape((float)Radius)
 			{
-
 				Origin = new Vector2f((float)Radius, (float)Radius),
 				FillColor = Color.Red,
 				Position = new Vector2f(planet.Position[0], planet.Position[1])
@@ -151,24 +146,36 @@ class SFMLWindow
 
 			foreach (var moon in planet.Moons)
 			{
-				renderwindow.Draw(new CircleShape(4, 8)
+				float MoonRadius = planet.Size * system_scale / 500;
+
+				renderwindow.Draw(new CircleShape(MoonRadius)
 				{
 					FillColor = Color.Blue,
-					Origin = new Vector2f(moon.Size, moon.Size),
+					Origin = new Vector2f(MoonRadius, MoonRadius),
 					Position = new Vector2f(moon.Position[0], moon.Position[1])
 				});
+
+#if DEBUG
+				//Draw moon relation lines
+				VertexArray moontoplanetline = new VertexArray(PrimitiveType.LinesStrip, 0);
+				moontoplanetline.Append(new Vertex(new Vector2f(planet.Position[0], planet.Position[1])));
+				moontoplanetline.Append(new Vertex(new Vector2f(moon.Position[0],moon.Position[1])));
+				renderwindow.Draw(moontoplanetline);
+#endif
 			}
 
-
-			//lines to planets TODO this is just debug
-			VertexArray line = new VertexArray(PrimitiveType.LinesStrip, 0);
-			line.Append(new Vertex(new Vector2f(planet.Position[0], planet.Position[1])));
-			line.Append(new Vertex(new Vector2f(0,0)));
-			renderwindow.Draw(line);
+#if DEBUG
+			//lines to planets, THis is only compiled to debug version
+			VertexArray planetcenterline = new VertexArray(PrimitiveType.LinesStrip, 0);
+			planetcenterline.Append(new Vertex(new Vector2f(planet.Position[0], planet.Position[1])));
+			planetcenterline.Append(new Vertex(new Vector2f(0,0)));
+			renderwindow.Draw(planetcenterline);
+#endif
 		}
+
 		foreach (var asteroid in sys.Asteroids)
 		{
-			renderwindow.Draw(new CircleShape(2, 8)
+			renderwindow.Draw(new CircleShape(8)
 			{
 				FillColor = Color.Green,
 				Position = new Vector2f(asteroid.Position[0], asteroid.Position[1]),

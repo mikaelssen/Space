@@ -109,7 +109,7 @@ namespace Space.Objects
 			};
 
 			//planet generation
-			for (int i = 0; i < rng.Next(4, 10); i++)
+			for (int i = 0; i < rng.Next(40, 400); i++)
 			{
 				//planet
 				Planet planet = new Planet

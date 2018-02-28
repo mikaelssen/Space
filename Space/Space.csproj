@@ -129,6 +129,10 @@
     <Content Include="Resources\Names.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="sfmlnet-audio-2.dll" />
+    <Content Include="sfmlnet-graphics-2.dll" />
+    <Content Include="sfmlnet-system-2.dll" />
+    <Content Include="sfmlnet-window-2.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

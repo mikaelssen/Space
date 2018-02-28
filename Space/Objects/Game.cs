@@ -103,12 +103,11 @@ namespace Space.Objects
 					Name = Names.GetRandomName(),
 					Size = rng.Next(400, 7000),
 					Resources = new List<Resource>(),
-					Bearing = RandomRange(0, 360),
-					DistanceFromStar =  RandomRange(1, 2),
+					Bearing = rng.Next(0, 360),
 				};
 				//this one is special, leave outside initial generation
-				planet.Velocity = Math.Sqrt((6.67408 / 2) * (system.Star.Mass * 10000000) * (2 / planet.DistanceFromStar));
-
+				planet.Velocity = Math.Sqrt((6.67408 / 2) * (system.Star.Mass / 2) * (2 / planet.DistanceFromStar));
+				
 				//moons
 				List<Moon> moonsperplanet = new List<Moon>();
 				for (int m = 0; m < rng.Next(0, 8); m++)
@@ -158,15 +157,6 @@ namespace Space.Objects
 			a.JumpPoints.Add(point);
 			b.JumpPoints.Add(point);
 		}
-
-		public static int RandomRange(int min, int max)
-		{
-			return Math.Abs(rng.Next() * (max - min) + min);
-		}
-
-		public static double RandomRange(double min, double max)
-		{
-			return Math.Abs(rng.NextDouble() * (max - min) + min);
-		}
+		
 	}
 }

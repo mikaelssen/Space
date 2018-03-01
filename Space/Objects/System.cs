@@ -118,7 +118,6 @@ namespace Space.Objects
 		{
 			Position = new float[] { 0, 0 };
 			Resources = new List<Resource>();
-			DistanceFromPlanet = Game.rng.Next(1, 5);
 			Velocity = 30000;
 			Bearing = 5000;
 			Size = 0;

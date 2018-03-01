@@ -162,7 +162,7 @@ class SFMLWindow
 
 
 				//moon
-				renderwindow.Draw(new CircleShape(MoonRadius)
+				renderwindow.Draw(new CircleShape(5)
 				{
 					FillColor = Color.Blue,
 					Origin = new Vector2f(MoonRadius, MoonRadius),
@@ -178,7 +178,6 @@ class SFMLWindow
 					FillColor = Color.Transparent,
 					OutlineThickness = 1
 				});
-
 
 #if DEBUG
 				//Draw moon relation lines

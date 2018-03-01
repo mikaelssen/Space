@@ -133,14 +133,39 @@ namespace Space.Objects
 		public int Quantity { get; set; }
 		public float Acsessibility { get; set; }
 
+		#region Resource Maths, allows for direct manipulation of objects
 
-		#region maths
 		public static Resource operator +(Resource a, Resource b)
 		{
 			a.Quantity += b.Quantity;
 			return a;
 		}
-#endregion
+
+		public static Resource operator *(Resource a, Resource b)
+		{
+			a.Quantity *= b.Quantity;
+			if (a.Quantity <= 0) //can't be less than 0, also prevents negative multiplication?
+				a.Quantity = 0;
+			return a;
+		}
+
+		public static Resource operator /(Resource a, Resource b)
+		{
+			a.Quantity /= b.Quantity;
+			if (a.Quantity <= 0) //can't be less than 0
+				a.Quantity = 0;
+			return a;
+		}
+
+		public static Resource operator -(Resource a, Resource b)
+		{
+			a.Quantity -= b.Quantity;
+			if (a.Quantity <= 0)
+				a.Quantity = 0;
+			return a;
+		}
+
+		#endregion
 
 		public Resource()
 		{

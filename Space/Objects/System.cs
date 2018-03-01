@@ -42,9 +42,9 @@ namespace Space.Objects
 		//TODO Random this a bit more.
 		public Star()
 		{
-			Size = 696000;
-			Mass = 2000;
-		}
+			Size = 1391000; //In Km
+			Mass = 200000000000000; //In trillion tonnes
+        }
 	}
 
 	public class Structure
@@ -82,34 +82,40 @@ namespace Space.Objects
 		public float[] Position { get; set; }
 		public List<Resource> Resources { get; set; }
 		public int Size { get; set; }
-		public string Name { get; set; }
+        public double Mass { get; set; } //Star mass should be about 330 000 times more than planet mass for sun earth ratio 
+        public int Density { get; set; }//Object density earth is about 5515, juptier 1326, our moon is 3344 (kg/m^3)
+        public string Name { get; set; }
 		public List<Moon> Moons { get; set; }
-		public double Velocity { get; set; }
+		public double Velocity { get; set; } //In M/s
 		public double Bearing { get; set; }
-		public double DistanceFromStar { get; set; } 
+		public float DistanceFromStar { get; set; } 
 		public byte OrbialDirection { get; set; }
 
 		public Planet()
 		{
 			Position = new float[] { 0, 0 };
 			Resources = new List<Resource>();
-			Size = 0;
-			Velocity = 30000;
+			Size = 0; //In Km Diameter
+            Density = 1300;
+            Mass = 600000000; //In trillion tonnes
+            Velocity = 30000;
 			Bearing = 5000;
-			DistanceFromStar = Game.rng.Next(100,1000);
+            DistanceFromStar = 150000;//in thousands km
 			Name = string.Empty;
 			Moons = new List<Moon>();
-			OrbialDirection = 1;
+			OrbialDirection = (byte)Game.rng.Next(0, 1);
 		}
 	}
 
 	public class Moon
 	{
 		public float[] Position { get; set; }
-		public double DistanceFromPlanet { get; set; }
+		public float DistanceFromPlanet { get; set; }
 		public List<Resource> Resources { get; set; }
 		public int Size { get; set; }
-		public string Name { get; set; }
+        public int Density { get; set; }//Object density earth is about 5515, juptier 1326, our moon is 3344 (kg/m^3)
+        public double Mass { get; set; }
+        public string Name { get; set; }
 		public double Bearing { get; internal set; }
 		public double Velocity { get; internal set; }
 		public byte OrbialDirection { get; internal set; }
@@ -118,12 +124,13 @@ namespace Space.Objects
 		{
 			Position = new float[] { 0, 0 };
 			Resources = new List<Resource>();
-			DistanceFromPlanet = Game.rng.Next(20, 50);
-			Velocity = 30000;
+			Velocity = 300000;
 			Bearing = 5000;
-			Size = 0;
+            Density = 3344;
+            Mass = 70000000; //In trillion tonnes
+            Size = 0;
 			Name = string.Empty;
-			OrbialDirection = 1;
+			OrbialDirection = (byte)Game.rng.Next(0, 1);
 		}
 	}
 
@@ -133,14 +140,39 @@ namespace Space.Objects
 		public int Quantity { get; set; }
 		public float Acsessibility { get; set; }
 
+		#region Resource Maths, allows for direct manipulation of objects
 
-		#region maths
 		public static Resource operator +(Resource a, Resource b)
 		{
 			a.Quantity += b.Quantity;
 			return a;
 		}
-#endregion
+
+		public static Resource operator *(Resource a, Resource b)
+		{
+			a.Quantity *= b.Quantity;
+			if (a.Quantity <= 0) //can't be less than 0, also prevents negative multiplication?
+				a.Quantity = 0;
+			return a;
+		}
+
+		public static Resource operator /(Resource a, Resource b)
+		{
+			a.Quantity /= b.Quantity;
+			if (a.Quantity <= 0) //can't be less than 0
+				a.Quantity = 0;
+			return a;
+		}
+
+		public static Resource operator -(Resource a, Resource b)
+		{
+			a.Quantity -= b.Quantity;
+			if (a.Quantity <= 0)
+				a.Quantity = 0;
+			return a;
+		}
+
+		#endregion
 
 		public Resource()
 		{

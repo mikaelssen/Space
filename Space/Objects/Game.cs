@@ -120,11 +120,11 @@ namespace Space.Objects
                     Resources = new List<Resource>(),
                     Bearing = rng.Next(0, 360),
                     Density = rng.Next(1000, 7000),
-                    DistanceFromStar = rng.Next(240000, 240000)
+                    DistanceFromStar = rng.Next(50000, 2000000)
                 };
-				//this one is special, leave outside initial generation				
-                planet.Velocity = Math.Round(Math.Sqrt((10 * (system.Star.Mass + planet.Mass)) / (planet.DistanceFromStar*10)));
-                planet.Mass = Math.Round(Math.Pow(planet.Size/2,3)*314*75/5500000000*planet.Density);
+                //this one is special, leave outside initial generation	
+                planet.Mass = Math.Round(Math.Pow(planet.Size / 2, 3) * 314 * 75 / 5500000000 * planet.Density);
+                planet.Velocity = Math.Round(Math.Sqrt((10 * (system.Star.Mass + planet.Mass)) / (planet.DistanceFromStar*10)));                
 
 				//moons
 				List<Moon> moonsperplanet = new List<Moon>();

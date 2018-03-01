@@ -18,9 +18,9 @@ class SFMLWindow
 		form = new System.Windows.Forms.Form // create our form
 		{
 			Size = new System.Drawing.Size(800, 800), 
-			AutoSize = true,
+			AutoSize = true
 		};
-		form.Show(); 
+		form.Show();
 
 		//event listeners
 		form.Resize += Form_Resize;
@@ -29,8 +29,11 @@ class SFMLWindow
 		rendersurface = new DrawingSurface// our control for SFML to draw on
 		{
 			Size = form.Size, // set our SFML surface control size to be 500 width & 500 height
-		}; 
+		};
 		form.Controls.Add(rendersurface); // add the SFML surface control to our form
+
+		rendersurface.Focus();
+		rendersurface.Select(); //this forcuses and selects the SFML instance.
 
 		// initialize sfml
 		renderwindow = new RenderWindow(rendersurface.Handle); // creates our SFML RenderWindow on our surface control
@@ -115,7 +118,7 @@ class SFMLWindow
 			FillColor = Color.Yellow,
 			Radius = star_size,
 			Position = new Vector2f(0, 0),
-			Origin = new Vector2f(star_size, star_size)
+			Origin = new Vector2f(star_size, star_size) //Center it
 			
 		});
 
@@ -129,7 +132,7 @@ class SFMLWindow
 			renderwindow.Draw(new CircleShape((float)planet.DistanceFromStar,50)
 			{
 				Position = new Vector2f(0, 0),
-				Origin = new Vector2f((float)planet.DistanceFromStar, (float)planet.DistanceFromStar),
+				Origin = new Vector2f((float)planet.DistanceFromStar, (float)planet.DistanceFromStar), //center of point
 				OutlineColor = Color.Green,
 				FillColor = Color.Transparent,
 				OutlineThickness = 2

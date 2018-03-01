@@ -86,7 +86,7 @@ namespace Space.Objects
 		public List<Moon> Moons { get; set; }
 		public double Velocity { get; set; }
 		public double Bearing { get; set; }
-		public double DistanceFromStar { get; set; } 
+		public float DistanceFromStar { get; set; } 
 		public byte OrbialDirection { get; set; }
 
 		public Planet()
@@ -99,14 +99,14 @@ namespace Space.Objects
 			DistanceFromStar = Game.rng.Next(100,1000);
 			Name = string.Empty;
 			Moons = new List<Moon>();
-			OrbialDirection = 1;
+			OrbialDirection = (byte)Game.rng.Next(0, 1);
 		}
 	}
 
 	public class Moon
 	{
 		public float[] Position { get; set; }
-		public double DistanceFromPlanet { get; set; }
+		public float DistanceFromPlanet { get; set; }
 		public List<Resource> Resources { get; set; }
 		public int Size { get; set; }
 		public string Name { get; set; }
@@ -118,12 +118,12 @@ namespace Space.Objects
 		{
 			Position = new float[] { 0, 0 };
 			Resources = new List<Resource>();
-			DistanceFromPlanet = Game.rng.Next(20, 50);
+			DistanceFromPlanet = Game.rng.Next(1, 5);
 			Velocity = 30000;
 			Bearing = 5000;
 			Size = 0;
 			Name = string.Empty;
-			OrbialDirection = 1;
+			OrbialDirection = (byte)Game.rng.Next(0, 1);
 		}
 	}
 

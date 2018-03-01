@@ -102,7 +102,7 @@
 			this.loadGameToolStripMenuItem.Name = "loadGameToolStripMenuItem";
 			this.loadGameToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.loadGameToolStripMenuItem.Text = "Load Game";
-			this.loadGameToolStripMenuItem.Click += new System.EventHandler(this.loadGameToolStripMenuItem_Click);
+			this.loadGameToolStripMenuItem.Click += new System.EventHandler(this.LoadGameToolStripMenuItem_Click);
 			// 
 			// MainForm
 			// 

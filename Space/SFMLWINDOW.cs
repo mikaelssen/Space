@@ -11,20 +11,32 @@ class SFMLWindow
 	RenderWindow renderwindow;
 	System.Windows.Forms.Form form;
 	View view;
+	int tickspeed = 5; //TODO implement controll to increase and decrease simulation speed
+
+#if DEBUG
+	VertexArray moonpathline = new VertexArray(PrimitiveType.LinesStrip, 0);
+#endif
 
 	public SFMLWindow()
 	{
 		// initialize the form
 		form = new System.Windows.Forms.Form // create our form
 		{
-			Size = new System.Drawing.Size(800, 800), 
+			Size = new System.Drawing.Size(800, 800),
 			AutoSize = true
 		};
 		form.Show();
 
 		//event listeners
 		form.Resize += Form_Resize;
-		form.KeyPress += Form_KeyPress;
+
+		//make sure there's a game. or something
+
+		if (Game.Systems.Count <= 0)
+			Game.LoadGame();
+		if (Game.Systems.Count <= 0) //if no game to load we make a game
+			Game.NewGame();
+
 
 		rendersurface = new DrawingSurface// our control for SFML to draw on
 		{
@@ -37,9 +49,9 @@ class SFMLWindow
 
 		// initialize sfml
 		renderwindow = new RenderWindow(rendersurface.Handle); // creates our SFML RenderWindow on our surface control
-		//set view
+															   //set view
 		view = renderwindow.GetView();
-		view.Center = new Vector2f(0,0);
+		view.Center = new Vector2f(0, 0);
 		//event handler for keys
 		renderwindow.KeyPressed += Renderwindow_KeyPressed;
 		//TODO make sure that the window is selected properly, as it won't allow for movement if it's not. BUG
@@ -50,16 +62,10 @@ class SFMLWindow
 			System.Windows.Forms.Application.DoEvents(); // handle form events
 			renderwindow.DispatchEvents(); // handle SFML events - NOTE this is still required when SFML is hosted in another window
 			renderwindow.Clear(Color.Black); // clear our SFML RenderWindow
-			Game.Update();
+			Game.Update(tickspeed);
 			Draw();
 			renderwindow.Display(); // display what SFML has drawn to the screen
 		}
-	}
-	
-
-	private void Form_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
-	{
-			//handle sfml input here i guess?
 	}
 
 	private void Form_Resize(object sender, EventArgs e)
@@ -76,15 +82,21 @@ class SFMLWindow
 		int speed = 50;
 		//move the view
 		if (e.Code == Keyboard.Key.A)
-			view.Move(new Vector2f(-speed,  0));
+			view.Move(new Vector2f(-speed, 0));
 		if (e.Code == Keyboard.Key.D)
-			view.Move(new Vector2f( speed,  0));
+			view.Move(new Vector2f(speed, 0));
 		if (e.Code == Keyboard.Key.W)
-			view.Move(new Vector2f( 0, -speed));
+			view.Move(new Vector2f(0, -speed));
 		if (e.Code == Keyboard.Key.S)
-			view.Move(new Vector2f( 0,  speed));
-		if (e.Code == Keyboard.Key.Space)
-			view.Zoom(4);
+			view.Move(new Vector2f(0, speed));
+		if (e.Code == Keyboard.Key.R)
+			view.Zoom(2f);
+		if (e.Code == Keyboard.Key.F)
+			view.Zoom(0.5f);
+		if (e.Code == Keyboard.Key.T)
+			tickspeed++;
+		if (e.Code == Keyboard.Key.G)
+			tickspeed--;
 
 		//System.Diagnostics.Debug.WriteLine(e.Code.ToString());
 
@@ -94,16 +106,13 @@ class SFMLWindow
 	{
 		//set view
 		renderwindow.SetView(view);
-		//TODO Only render the one active system 
-		if (Game.Systems.Count <= 0)
-		{
-			Game.NewGame();
-		}
+
 		SolarSystem sys = Game.Systems[0];
 
 		double system_size = 1000;
 		float star_size = 0;
 		float system_scale = 1;
+		
 
 		star_size = sys.Star.Size / 20000;
 
@@ -114,34 +123,33 @@ class SFMLWindow
 		}
 
 		//sun
-		renderwindow.Draw(new CircleShape(star_size) {
+		renderwindow.Draw(new CircleShape(star_size)
+		{
 			FillColor = Color.Yellow,
 			Radius = star_size,
 			Position = new Vector2f(0, 0),
 			Origin = new Vector2f(star_size, star_size) //Center it
-			
 		});
 
 		foreach (var planet in sys.Planets)
 		{
 
-			double Orbit = planet.DistanceFromStar * system_scale;
-			double Radius = planet.Size * system_scale / 500;
-			
+			float Radius = planet.Size * system_scale / 500;
+
 			//orbit path
-			renderwindow.Draw(new CircleShape((float)planet.DistanceFromStar,50)
+			renderwindow.Draw(new CircleShape(planet.DistanceFromStar)
 			{
 				Position = new Vector2f(0, 0),
-				Origin = new Vector2f((float)planet.DistanceFromStar, (float)planet.DistanceFromStar), //center of point
+				Origin = new Vector2f(planet.DistanceFromStar, planet.DistanceFromStar), //center of point
 				OutlineColor = Color.Green,
 				FillColor = Color.Transparent,
 				OutlineThickness = 2
 			});
 
 			//planet
-			renderwindow.Draw(new CircleShape((float)Radius)
+			renderwindow.Draw(new CircleShape(Radius)
 			{
-				Origin = new Vector2f((float)Radius, (float)Radius),
+				Origin = new Vector2f(Radius, Radius),
 				FillColor = Color.Red,
 				Position = new Vector2f(planet.Position[0], planet.Position[1])
 			});
@@ -151,6 +159,9 @@ class SFMLWindow
 			{
 				float MoonRadius = planet.Size * system_scale / 500;
 
+
+
+				//moon
 				renderwindow.Draw(new CircleShape(MoonRadius)
 				{
 					FillColor = Color.Blue,
@@ -158,24 +169,50 @@ class SFMLWindow
 					Position = new Vector2f(moon.Position[0], moon.Position[1])
 				});
 
+				//moon orbits
+				renderwindow.Draw(new CircleShape(moon.DistanceFromPlanet)
+				{
+					Position = new Vector2f(planet.Position[0], planet.Position[1]),
+					Origin = new Vector2f(moon.DistanceFromPlanet, moon.DistanceFromPlanet), //center of point
+					OutlineColor = Color.Yellow,
+					FillColor = Color.Transparent,
+					OutlineThickness = 1
+				});
+
+
 #if DEBUG
 				//Draw moon relation lines
-				VertexArray moontoplanetline = new VertexArray(PrimitiveType.LinesStrip, 0);
-				moontoplanetline.Append(new Vertex(new Vector2f(planet.Position[0], planet.Position[1])));
-				moontoplanetline.Append(new Vertex(new Vector2f(moon.Position[0],moon.Position[1])));
-				renderwindow.Draw(moontoplanetline);
+				//VertexArray moontoplanetline = new VertexArray(PrimitiveType.LinesStrip, 0);
+				//moontoplanetline.Append(new Vertex(new Vector2f(planet.Position[0], planet.Position[1])));
+				//moontoplanetline.Append(new Vertex(new Vector2f(moon.Position[0],moon.Position[1])));
+				//renderwindow.Draw(moontoplanetline);
 #endif
 			}
 
 #if DEBUG
 			//lines to planets, THis is only compiled to debug version
-			VertexArray planetcenterline = new VertexArray(PrimitiveType.LinesStrip, 0);
-			planetcenterline.Append(new Vertex(new Vector2f(planet.Position[0], planet.Position[1])));
-			planetcenterline.Append(new Vertex(new Vector2f(0,0)));
-			renderwindow.Draw(planetcenterline);
+			//VertexArray planetcenterline = new VertexArray(PrimitiveType.LinesStrip, 0);
+			//planetcenterline.Append(new Vertex(new Vector2f(planet.Position[0], planet.Position[1])));
+			//planetcenterline.Append(new Vertex(new Vector2f(0,0)));
+			//renderwindow.Draw(planetcenterline);
 #endif
 		}
+#if DEBUG
+		//tracks one moon may crash if there is no moon
+		try
+		{
+			moonpathline.Append(new Vertex(new Vector2f(Game.Systems[0].Planets[0].Moons[0].Position[0], Game.Systems[0].Planets[0].Moons[0].Position[1])));
+			renderwindow.Draw(moonpathline);
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine(e.Message + "Making a new game 'cause fuck it");
+			Game.NewGame();
+		}
+#endif
 
+
+		/* TODO implement asteroids properly and render them in nice belts or something.
 		foreach (var asteroid in sys.Asteroids)
 		{
 			renderwindow.Draw(new CircleShape(8)
@@ -184,9 +221,9 @@ class SFMLWindow
 				Position = new Vector2f(asteroid.Position[0], asteroid.Position[1]),
 				Origin = new Vector2f(asteroid.Position[0], asteroid.Position[1])
 			});
-		}
-		
-		
+		}*/
+
+
 	}
 }
 public class DrawingSurface : System.Windows.Forms.Control

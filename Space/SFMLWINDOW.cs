@@ -181,7 +181,7 @@ class SFMLWindow
 
 #if DEBUG
 				//Draw moon relation lines
-				//////VertexArray moontoplanetline = new VertexArray(PrimitiveType.LinesStrip, 0);
+				//VertexArray moontoplanetline = new VertexArray(PrimitiveType.LinesStrip, 0);
 				//moontoplanetline.Append(new Vertex(new Vector2f(planet.Position[0], planet.Position[1])));
 				//moontoplanetline.Append(new Vertex(new Vector2f(moon.Position[0],moon.Position[1])));
 				//renderwindow.Draw(moontoplanetline);

@@ -156,10 +156,10 @@ class SFMLWindow
 				});
 
 				//moon orbits
-				renderwindow.Draw(new CircleShape(moon.DistanceFromPlanet / 1000)
+				renderwindow.Draw(new CircleShape(moon.DistanceFromPlanet / 5000)
 				{
 					Position = new Vector2f(planet.Position[0], planet.Position[1]),
-					Origin = new Vector2f(moon.DistanceFromPlanet / 100, moon.DistanceFromPlanet / 100), //center of point
+					Origin = new Vector2f(moon.DistanceFromPlanet / 5000, moon.DistanceFromPlanet / 5000), //center of point
 					OutlineColor = Color.Yellow,
 					FillColor = Color.Transparent,
 					OutlineThickness = 10

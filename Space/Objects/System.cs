@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SFML.System;
 using LiteDB;
+using SFML.Graphics;
 
 namespace Space.Objects
 {
@@ -39,11 +40,26 @@ namespace Space.Objects
 		public int Size { get; set; }
 		public double Mass { get; set; }
 
+		public CircleShape Shape { get; set; }
+
 		//TODO Random this a bit more.
 		public Star()
 		{
 			Size = 1391000; //In Km
 			Mass = 200000000000000; //In trillion tonnes
+			Shape = new CircleShape()
+			{
+				FillColor = Color.Yellow,
+				Position = new Vector2f(0, 0),
+			};
+		}
+
+		public Drawable GetDrawable()
+		{
+			float Radius = Size / 20000;
+			Shape.Radius = Radius;
+			Shape.Origin = new Vector2f(Radius, Radius);
+			return Shape;
 		}
 	}
 
@@ -69,12 +85,15 @@ namespace Space.Objects
 		public int[] Position { get; set; }
 		public int CurrentSpeed { get; set; }
 		public string ShipName { get; set; }
+		public CircleShape Shape { get; set; }
+
 		public Ship()
 		{
 			Position = Array.Empty<int>();
 			CurrentSpeed = 0;
 			ShipName = string.Empty;
-		}
+			Shape = new CircleShape();
+	}
 	}
 
 	public class Planet
@@ -90,6 +109,7 @@ namespace Space.Objects
 		public double Bearing { get; set; }
 		public float DistanceFromStar { get; set; }
 		public byte OrbialDirection { get; set; }
+		public CircleShape Shape { get; set; }
 
 		public Planet()
 		{
@@ -104,6 +124,20 @@ namespace Space.Objects
 			Name = string.Empty;
 			Moons = new List<Moon>();
 			OrbialDirection = (byte)Game.rng.Next(0, 1);
+
+			Shape = new CircleShape()
+			{
+				FillColor = Color.Red
+			};
+		}
+
+		public Drawable GetDrawable()
+		{
+			float Radius = Size / 500;
+			Shape.Origin = new Vector2f(Radius, Radius);
+			Shape.Position = new Vector2f(Position[0], Position[1]);
+			Shape.Radius = Radius;
+			return Shape;
 		}
 	}
 
@@ -119,6 +153,7 @@ namespace Space.Objects
 		public double Bearing { get; internal set; }
 		public double Velocity { get; internal set; }
 		public byte OrbialDirection { get; internal set; }
+		public CircleShape Shape { get; set; }
 
 		public Moon()
 		{
@@ -131,6 +166,18 @@ namespace Space.Objects
 			Size = 0;
 			Name = string.Empty;
 			OrbialDirection = (byte)Game.rng.Next(0, 1);
+			Shape = new CircleShape()
+			{
+				FillColor = Color.Blue
+			};
+		}
+
+		public Drawable GetDrawable(float MoonRadius)
+		{
+			Shape.Origin = new Vector2f(MoonRadius, MoonRadius);
+			Shape.Radius = MoonRadius;
+			Shape.Position = new Vector2f(Position[0], Position[1]);
+			return Shape;
 		}
 	}
 
@@ -188,6 +235,7 @@ namespace Space.Objects
 		public List<Resource> Resources { get; set; }
 		public int Size { get; set; }
 		public string Name { get; set; }
+		public CircleShape Shape { get; set; }
 
 		public Asteroid()
 		{
@@ -195,6 +243,7 @@ namespace Space.Objects
 			Resources = new List<Resource>();
 			Size = 0;
 			Name = string.Empty;
+			Shape = new CircleShape();
 		}
 	}
 
@@ -206,6 +255,7 @@ namespace Space.Objects
 		public int[] Position { get; set; }
 		public string Name { get; set; }
 		public Int32[] DestinationIDs { get; set; }
+		public CircleShape Shape { get; set; }
 		//TODO Implement jump point Discovery, somewhere else ofc
 
 		public JumpPoint()
@@ -213,6 +263,7 @@ namespace Space.Objects
 			Position = Array.Empty<int>();
 			Name = string.Empty;
 			DestinationIDs = Array.Empty<Int32>();
+			Shape = new CircleShape();
 		}
 	}
 

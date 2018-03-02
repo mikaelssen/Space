@@ -132,7 +132,7 @@ class SFMLWindow
 				OutlineColor = Color.Green,
 				FillColor = Color.Transparent,
 				OutlineThickness = 10
-			});
+			}); 
 
 			//planet
 			renderwindow.Draw(new CircleShape(Radius)

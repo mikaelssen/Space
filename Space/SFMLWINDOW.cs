@@ -11,7 +11,7 @@ class SFMLWindow
 	RenderWindow renderwindow;
 	System.Windows.Forms.Form form;
 	View view;
-	int tickspeed = 5; //TODO implement controll to increase and decrease simulation speed
+	int tickspeed = 1;
 
 #if DEBUG
 	VertexArray moonpathline = new VertexArray(PrimitiveType.LinesStrip, 0);
@@ -54,7 +54,6 @@ class SFMLWindow
 		view.Center = new Vector2f(0, 0);
 		//event handler for keys
 		renderwindow.KeyPressed += Renderwindow_KeyPressed;
-		//TODO make sure that the window is selected properly, as it won't allow for movement if it's not. BUG
 
 		// drawing loop
 		while (form.Visible) // loop while the window is open
@@ -97,9 +96,6 @@ class SFMLWindow
 			tickspeed++;
 		if (e.Code == Keyboard.Key.G)
 			tickspeed--;
-
-		//System.Diagnostics.Debug.WriteLine(e.Code.ToString());
-
 	}
 
 	public void Draw()
@@ -109,19 +105,11 @@ class SFMLWindow
 
 		SolarSystem sys = Game.Systems[0];
 
-		double system_size = 1000;
 		float star_size = 0;
 		float system_scale = 1;
 		
-
 		star_size = sys.Star.Size / 20000;
-
-		foreach (var planet in sys.Planets)
-		{
-			if (system_size < planet.DistanceFromStar * 2)
-				system_size = planet.DistanceFromStar * 2;
-		}
-
+		
 		//sun
 		renderwindow.Draw(new CircleShape(star_size)
 		{
@@ -137,13 +125,13 @@ class SFMLWindow
 			float Radius = planet.Size * system_scale / 500;
 
 			//orbit path
-			renderwindow.Draw(new CircleShape(planet.DistanceFromStar)
+			renderwindow.Draw(new CircleShape(planet.DistanceFromStar / 100)
 			{
 				Position = new Vector2f(0, 0),
-				Origin = new Vector2f(planet.DistanceFromStar, planet.DistanceFromStar), //center of point
+				Origin = new Vector2f(planet.DistanceFromStar / 100, planet.DistanceFromStar / 100), //center of point
 				OutlineColor = Color.Green,
 				FillColor = Color.Transparent,
-				OutlineThickness = 2
+				OutlineThickness = 10
 			});
 
 			//planet
@@ -159,24 +147,22 @@ class SFMLWindow
 			{
 				float MoonRadius = planet.Size * system_scale / 500;
 
-
-
 				//moon
-				renderwindow.Draw(new CircleShape(5)
+				renderwindow.Draw(new CircleShape(MoonRadius )
 				{
 					FillColor = Color.Blue,
-					Origin = new Vector2f(MoonRadius, MoonRadius),
+					Origin = new Vector2f(MoonRadius, MoonRadius ),
 					Position = new Vector2f(moon.Position[0], moon.Position[1])
 				});
 
 				//moon orbits
-				renderwindow.Draw(new CircleShape(moon.DistanceFromPlanet)
+				renderwindow.Draw(new CircleShape(moon.DistanceFromPlanet / 100)
 				{
 					Position = new Vector2f(planet.Position[0], planet.Position[1]),
-					Origin = new Vector2f(moon.DistanceFromPlanet, moon.DistanceFromPlanet), //center of point
+					Origin = new Vector2f(moon.DistanceFromPlanet / 100 , moon.DistanceFromPlanet / 100), //center of point
 					OutlineColor = Color.Yellow,
 					FillColor = Color.Transparent,
-					OutlineThickness = 1
+					OutlineThickness = 10
 				});
 
 #if DEBUG

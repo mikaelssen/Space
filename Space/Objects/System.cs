@@ -8,12 +8,12 @@ using LiteDB;
 
 namespace Space.Objects
 {
-	
-	
+
+
 	class SolarSystem
 	{
 		public Int32 Id { get; set; }
-		public List<JumpPoint> JumpPoints {get; set;}
+		public List<JumpPoint> JumpPoints { get; set; }
 		public List<Asteroid> Asteroids { get; set; }
 		public List<Planet> Planets { get; set; }
 		public List<Ship> Ships { get; set; }
@@ -29,27 +29,27 @@ namespace Space.Objects
 			Structures = new List<Structure>();
 			JumpPoints = new List<JumpPoint>();
 		}
-		
+
 	}
 
 	public class Star
 	{
 
 		public string Name { get; set; }
-		public int Size { get; set; } 
-		public double Mass { get; set; } 
+		public int Size { get; set; }
+		public double Mass { get; set; }
 
 		//TODO Random this a bit more.
 		public Star()
 		{
 			Size = 1391000; //In Km
 			Mass = 200000000000000; //In trillion tonnes
-        }
+		}
 	}
 
 	public class Structure
 	{
-		public Dictionary<Resource,int> Price { get; set; }
+		public Dictionary<Resource, int> Price { get; set; }
 		public Effect Effect { get; set; }
 
 		public Structure()
@@ -71,7 +71,7 @@ namespace Space.Objects
 		public string ShipName { get; set; }
 		public Ship()
 		{
-			Position =  Array.Empty<int>();
+			Position = Array.Empty<int>();
 			CurrentSpeed = 0;
 			ShipName = string.Empty;
 		}
@@ -82,13 +82,13 @@ namespace Space.Objects
 		public float[] Position { get; set; }
 		public List<Resource> Resources { get; set; }
 		public int Size { get; set; }
-        public double Mass { get; set; } //Star mass should be about 330 000 times more than planet mass for sun earth ratio 
-        public int Density { get; set; }//Object density earth is about 5515, juptier 1326, our moon is 3344 (kg/m^3)
-        public string Name { get; set; }
+		public double Mass { get; set; } //Star mass should be about 330 000 times more than planet mass for sun earth ratio 
+		public int Density { get; set; }//Object density earth is about 5515, juptier 1326, our moon is 3344 (kg/m^3)
+		public string Name { get; set; }
 		public List<Moon> Moons { get; set; }
 		public double Velocity { get; set; } //In M/s
 		public double Bearing { get; set; }
-		public float DistanceFromStar { get; set; } 
+		public float DistanceFromStar { get; set; }
 		public byte OrbialDirection { get; set; }
 
 		public Planet()
@@ -96,11 +96,11 @@ namespace Space.Objects
 			Position = new float[] { 0, 0 };
 			Resources = new List<Resource>();
 			Size = 0; //In Km Diameter
-            Density = 1300;
-            Mass = 600000000; //In trillion tonnes
-            Velocity = 30000;
+			Density = 1300;
+			Mass = 600000000; //In trillion tonnes
+			Velocity = 30000;
 			Bearing = 5000;
-            DistanceFromStar = 150000;//in thousands km
+			DistanceFromStar = 150000;//in thousands km
 			Name = string.Empty;
 			Moons = new List<Moon>();
 			OrbialDirection = (byte)Game.rng.Next(0, 1);
@@ -113,9 +113,9 @@ namespace Space.Objects
 		public float DistanceFromPlanet { get; set; }
 		public List<Resource> Resources { get; set; }
 		public int Size { get; set; }
-        public int Density { get; set; }//Object density earth is about 5515, juptier 1326, our moon is 3344 (kg/m^3)
-        public double Mass { get; set; }
-        public string Name { get; set; }
+		public int Density { get; set; }//Object density earth is about 5515, juptier 1326, our moon is 3344 (kg/m^3)
+		public double Mass { get; set; }
+		public string Name { get; set; }
 		public double Bearing { get; internal set; }
 		public double Velocity { get; internal set; }
 		public byte OrbialDirection { get; internal set; }
@@ -126,9 +126,9 @@ namespace Space.Objects
 			Resources = new List<Resource>();
 			Velocity = 300000;
 			Bearing = 5000;
-            Density = 3344;
-            Mass = 70000000; //In trillion tonnes
-            Size = 0;
+			Density = 3344;
+			Mass = 70000000; //In trillion tonnes
+			Size = 0;
 			Name = string.Empty;
 			OrbialDirection = (byte)Game.rng.Next(0, 1);
 		}
@@ -235,8 +235,8 @@ namespace Space.Objects
 		}
 	}
 
-	
 
-	public enum RESOURCETYPE{Critonite, Arkminium, Greberium, Cactuium, Quantinite, Entihnite, Houfium, Katerium, Mikerium, Peterium, Rigelium, Nuterite, zunbillium}
-						   //Crito		Arkentosh  Greb		  Cactus	Quantum		Entih	   houfnice Kat		  Mikaelssen Pizzapete rigel	Coconutsales Zunbil
+
+	public enum RESOURCETYPE { Critonite, Arkminium, Greberium, Cactuium, Quantinite, Entihnite, Houfium, Katerium, Mikerium, Peterium, Rigelium, Nuterite, zunbillium }
+							//Crito		Arkentosh  Greb		  Cactus	Quantum		Entih	   houfnice Kat		  Mikaelssen Pizzapete rigel	Coconutsales Zunbil
 }

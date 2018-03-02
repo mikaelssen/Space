@@ -77,8 +77,8 @@ namespace Space.Objects
 						foreach (var moon in planet.Moons)
 						{
 							double moonbearing = moon.Bearing;
-							double moonvelocity = (moon.Velocity + planet.Velocity) / 10000;
-							double moonorbit = moon.DistanceFromPlanet / 100;
+							double moonvelocity = (moon.Velocity + planet.Velocity) / 60;
+							double moonorbit = moon.DistanceFromPlanet / 5000;
 							//byte moondirection = moon.OrbialDirection;
 
 							double mooncircumference = (2 * moonorbit * Math.PI);
@@ -110,7 +110,7 @@ namespace Space.Objects
 			};
 
 			//planet generation
-			for (int i = 0; i < rng.Next(1, 10); i++)
+			for (int i = 0; i < rng.Next(1, 8); i++)
 			{
 				//planet
 				Planet planet = new Planet
@@ -130,7 +130,7 @@ namespace Space.Objects
 
 				//moons
 				List<Moon> moonsperplanet = new List<Moon>();
-				for (int m = 0; m < rng.Next(0, 9); m++)
+				for (int m = 0; m < rng.Next(1, 4); m++)
 				{
 					Moon moon = new Moon()
 					{
@@ -139,7 +139,7 @@ namespace Space.Objects
 						Density = rng.Next(3000, 5000),
 						Bearing = rng.Next(0, 360)
 					};
-					moon.DistanceFromPlanet = moon.Size + planet.Size * 10 + rng.Next(60000, 1000000);
+					moon.DistanceFromPlanet = moon.Size + planet.Size * 10 + rng.Next(60000, 10000000);
 					moon.Mass = Math.Round(Math.Pow(moon.Size / 2, 3) * 314 * 75 / 5500000000 * moon.Density);
 					moon.Velocity = Math.Round(Math.Sqrt((10 * (moon.Mass + planet.Mass)) / moon.DistanceFromPlanet));
 					moonsperplanet.Add(moon);

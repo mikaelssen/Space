@@ -23,9 +23,6 @@ namespace Space
 		{
 			InitializeComponent();
 		}
-		
-		
-		
 
 		private void GameScreenToolStripMenuItem_Click(object sender, EventArgs e)
 		{

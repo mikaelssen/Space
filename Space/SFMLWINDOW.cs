@@ -147,14 +147,6 @@ class SFMLWindow
 			{
 				float MoonRadius = planet.Size * system_scale / 500;
 
-				//moon
-				renderwindow.Draw(new CircleShape(MoonRadius )
-				{
-					FillColor = Color.Blue,
-					Origin = new Vector2f(MoonRadius, MoonRadius ),
-					Position = new Vector2f(moon.Position[0], moon.Position[1])
-				});
-
 				//moon orbits
 				renderwindow.Draw(new CircleShape(moon.DistanceFromPlanet / 5000)
 				{
@@ -164,6 +156,15 @@ class SFMLWindow
 					FillColor = Color.Transparent,
 					OutlineThickness = 10
 				});
+
+				//moon
+				renderwindow.Draw(new CircleShape(MoonRadius )
+				{
+					FillColor = Color.Blue,
+					Origin = new Vector2f(MoonRadius, MoonRadius ),
+					Position = new Vector2f(moon.Position[0], moon.Position[1])
+				});
+
 
 #if DEBUG
 				//Draw moon relation lines

@@ -12,6 +12,7 @@ class SFMLWindow
 	System.Windows.Forms.Form form;
 	View view;
 	int tickspeed = 1;
+	Vector2f v = new Vector2f();
 
 #if DEBUG
 	VertexArray moonpathline = new VertexArray(PrimitiveType.LinesStrip, 0);
@@ -33,7 +34,7 @@ class SFMLWindow
 		//make sure there's a game. or something
 
 		if (Game.Systems.Count <= 0)
-			Game.LoadGame();
+			//Game.LoadGame();
 		if (Game.Systems.Count <= 0) //if no game to load we make a game
 			Game.NewGame();
 
@@ -52,17 +53,24 @@ class SFMLWindow
 															   //set view
 		view = renderwindow.GetView();
 		view.Center = new Vector2f(0, 0);
+
 		//event handler for keys
 		renderwindow.KeyPressed += Renderwindow_KeyPressed;
+		renderwindow.MouseButtonPressed += Renderwindow_MousePressed;
 
 		// drawing loop
 		while (form.Visible) // loop while the window is open
 		{
 			System.Windows.Forms.Application.DoEvents(); // handle form events
-			renderwindow.DispatchEvents(); // handle SFML events - NOTE this is still required when SFML is hosted in another window
+
 			renderwindow.Clear(Color.Black); // clear our SFML RenderWindow
+
+			renderwindow.DispatchEvents(); // handle SFML events - NOTE this is still required when SFML is hosted in another window
+
 			Game.Update(tickspeed);
+			
 			Draw();
+
 			renderwindow.Display(); // display what SFML has drawn to the screen
 		}
 	}
@@ -74,6 +82,16 @@ class SFMLWindow
 		{
 			renderwindow.Size = new Vector2u((uint)form.Size.Width, (uint)form.Size.Height);
 		}
+	}
+
+	private void Renderwindow_MousePressed(object sender, MouseButtonEventArgs e)
+	{
+		if (e.Button == Mouse.Button.Left)
+		{
+			v = renderwindow.MapPixelToCoords(new Vector2i(e.X, e.Y), view);
+			Console.WriteLine($"X:{v.X} Y:{v.Y}");
+		}
+
 	}
 
 	private void Renderwindow_KeyPressed(object sender, SFML.Window.KeyEventArgs e)
@@ -105,26 +123,25 @@ class SFMLWindow
 
 		SolarSystem sys = Game.Systems[0];
 
-		float star_size = 0;
-		float system_scale = 1;
-		
-		star_size = sys.Star.Size / 20000;
-		
-		//sun
-		renderwindow.Draw(new CircleShape(star_size)
+
+		//mouse cord testing
+		renderwindow.Draw(new CircleShape()
 		{
-			FillColor = Color.Yellow,
-			Radius = star_size,
-			Position = new Vector2f(0, 0),
-			Origin = new Vector2f(star_size, star_size) //Center it
+			Radius = 50,
+			FillColor = Color.Magenta,
+			Position = v,
+			Origin = new Vector2f(50, 50)
 		});
+
+		//sun
+		renderwindow.Draw(sys.Star.GetDrawable());
 
 		foreach (var planet in sys.Planets)
 		{
 
-			float Radius = planet.Size * system_scale / 500;
+			float Radius = planet.Size / 500;
 
-			//orbit path
+			//orbit path //TODO add orbits as a function? X Y Distance
 			renderwindow.Draw(new CircleShape(planet.DistanceFromStar / 100)
 			{
 				Position = new Vector2f(0, 0),
@@ -135,17 +152,13 @@ class SFMLWindow
 			});
 
 			//planet
-			renderwindow.Draw(new CircleShape(Radius)
-			{
-				Origin = new Vector2f(Radius, Radius),
-				FillColor = Color.Red,
-				Position = new Vector2f(planet.Position[0], planet.Position[1])
-			});
+			planet.GetDrawable();
+			renderwindow.Draw(planet.Shape);
 
 
 			foreach (var moon in planet.Moons)
 			{
-				float MoonRadius = planet.Size * system_scale / 500;
+				float MoonRadius = planet.Size / 500;
 
 				//moon orbits
 				renderwindow.Draw(new CircleShape(moon.DistanceFromPlanet / 5000)
@@ -158,13 +171,7 @@ class SFMLWindow
 				});
 
 				//moon
-				renderwindow.Draw(new CircleShape(MoonRadius )
-				{
-					FillColor = Color.Blue,
-					Origin = new Vector2f(MoonRadius, MoonRadius ),
-					Position = new Vector2f(moon.Position[0], moon.Position[1])
-				});
-
+				renderwindow.Draw(moon.GetDrawable(MoonRadius));
 
 #if DEBUG
 				//Draw moon relation lines

@@ -62,7 +62,7 @@ namespace Space.Objects
 
 		public Drawable GetDrawable()
 		{
-			float Radius = Size / 20000;
+			float Radius = Size / 5000;
 			Shape.Radius = Radius;
 			Shape.Origin = new Vector2f(Radius, Radius);
 			return Shape;

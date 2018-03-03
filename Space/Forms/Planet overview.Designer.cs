@@ -60,6 +60,7 @@
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "Planet_overview";
+			this.ShowIcon = false;
 			this.Text = "Planet_overview";
 			this.Load += new System.EventHandler(this.Planet_overview_Load);
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();

@@ -1,6 +1,4 @@
 ﻿using Space.Objects;
-using System.Collections.Generic;
-using System.Data;
 using System.Windows.Forms;
 
 namespace Space.Forms
@@ -21,10 +19,8 @@ namespace Space.Forms
 				{
 					Tag = Sys
 				};
-				
 
 				TreeNode planets = new TreeNode("Planets");
-
 
 				foreach (var planet in Sys.Planets)
 				{
@@ -69,7 +65,6 @@ namespace Space.Forms
 					dataGridView1.Columns.Add("Moon", "Mass");
 					dataGridView1.Columns.Add("Moon", "Guid");
 					dataGridView1.Rows.Add(new string[] { moon.Name, "" + moon.Size, "" + moon.Mass, "" + moon.Guid });
-
 
 					System.Diagnostics.Debug.WriteLine(moon.Name);
 				}

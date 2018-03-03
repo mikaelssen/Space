@@ -6,7 +6,7 @@ using SFML.Window;
 
 class SFMLWindow
 {
-
+	
 	public DrawingSurface rendersurface;
 	RenderWindow renderwindow;
 	System.Windows.Forms.Form form;

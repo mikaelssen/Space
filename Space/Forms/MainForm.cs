@@ -1,23 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using SFML.Graphics;
-using SFML.Window;
-using SFML;
-using SFML.System;
 using Space.Objects;
+using Space.Forms;
 
 namespace Space
 {
 	public partial class MainForm : Form
 	{
 		SFMLWindow window;
+		Planet_overview overview;
 
 		public MainForm()
 		{
@@ -37,6 +28,12 @@ namespace Space
 		private void LoadGameToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			Game.LoadGame();
+		}
+
+		private void toolStripButton1_Click(object sender, EventArgs e)
+		{
+			overview = new Planet_overview();
+			overview.Show();
 		}
 	}
 }

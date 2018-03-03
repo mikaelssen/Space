@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SFML.System;
 using LiteDB;
 using SFML.Graphics;
@@ -10,8 +7,14 @@ using SFML.Graphics;
 namespace Space.Objects
 {
 
+	public class Entity
+	{
+		public Guid Guid { get; } = new Guid();
+		public Text Text { get; set; } = new Text("", Resources.Resources.Font);
+	}
 
-	class SolarSystem
+
+	public class SolarSystem : Entity
 	{
 		public Int32 Id { get; set; }
 		public List<JumpPoint> JumpPoints { get; set; }
@@ -20,7 +23,6 @@ namespace Space.Objects
 		public List<Ship> Ships { get; set; }
 		public List<Structure> Structures { get; set; }
 		public Star Star { get; set; }
-		public Text Text { get; set; }
 
 
 		public SolarSystem()
@@ -36,14 +38,13 @@ namespace Space.Objects
 
 	}
 
-	public class Star
+	public class Star : Entity
 	{
 
 		public string Name { get; set; }
 		public int Size { get; set; }
 		public double Mass { get; set; }
 		public CircleShape Shape { get; set; }
-		public Text Text { get; set; }
 
 		//TODO Random this a bit more.
 		public Star()
@@ -69,11 +70,12 @@ namespace Space.Objects
 
 		internal static void Click()
 		{
+			Game.UpdateData();
 			Console.WriteLine("I am the sun yes");
 		}
 	}
 
-	public class Structure
+	public class Structure : Entity
 	{
 		public Dictionary<Resource, int> Price { get; set; }
 		public Effect Effect { get; set; }
@@ -85,19 +87,18 @@ namespace Space.Objects
 		}
 	}
 
-	public class Effect
+	public class Effect : Entity
 	{
 		//TODO write effects
 	}
 
-	public class Ship
+	public class Ship : Entity
 	{
 		public int[] Position { get; set; }
 		public int CurrentSpeed { get; set; }
 		public string ShipName { get; set; }
 		public CircleShape Shape { get; set; }
 		public string Name { get; set; }
-		public Text Text { get; set; }
 
 		public Ship()
 		{
@@ -110,7 +111,7 @@ namespace Space.Objects
 		}
 	}
 
-	public class Planet
+	public class Planet : Entity
 	{
 		public float[] Position { get; set; }
 		public List<Resource> Resources { get; set; }
@@ -124,7 +125,11 @@ namespace Space.Objects
 		public float DistanceFromStar { get; set; }
 		public byte OrbialDirection { get; set; }
 		public CircleShape Shape { get; set; }
-		public Text Text { get; set; }
+
+		internal void Update()
+		{
+
+		}
 
 		internal void Click()
 		{
@@ -162,7 +167,7 @@ namespace Space.Objects
 		}
 	}
 
-	public class Moon
+	public class Moon : Entity
 	{
 		public float[] Position { get; set; }
 		public float DistanceFromPlanet { get; set; }
@@ -175,7 +180,6 @@ namespace Space.Objects
 		public double Velocity { get; internal set; }
 		public byte OrbialDirection { get; internal set; }
 		public CircleShape Shape { get; set; }
-		public Text Text { get; set; }
 
 		public Moon()
 		{
@@ -210,7 +214,7 @@ namespace Space.Objects
 		}
 	}
 
-	public class Resource
+	public class Resource : Entity
 	{
 		public RESOURCETYPE Resourcename { get; set; }
 		public int Quantity { get; set; }
@@ -258,7 +262,7 @@ namespace Space.Objects
 		}
 	}
 
-	public class Asteroid
+	public class Asteroid : Entity
 	{
 		public int[] Position { get; set; }
 		public List<Resource> Resources { get; set; }
@@ -276,7 +280,7 @@ namespace Space.Objects
 		}
 	}
 
-	public class JumpPoint
+	public class JumpPoint : Entity
 	{
 		[BsonId]
 		public Int32 Id { get; set; }
@@ -299,7 +303,7 @@ namespace Space.Objects
 	/// <summary>
 	/// Name class, also got function for fetching a name
 	/// </summary>
-	public class Names
+	public class Names 
 	{
 		public string Name { get; set; }
 

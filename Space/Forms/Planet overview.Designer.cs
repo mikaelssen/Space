@@ -39,6 +39,7 @@
 			this.treeView1.Name = "treeView1";
 			this.treeView1.Size = new System.Drawing.Size(222, 325);
 			this.treeView1.TabIndex = 0;
+			this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeView1_AfterSelect);
 			// 
 			// dataGridView1
 			// 
@@ -60,6 +61,7 @@
 			this.MinimizeBox = false;
 			this.Name = "Planet_overview";
 			this.Text = "Planet_overview";
+			this.Load += new System.EventHandler(this.Planet_overview_Load);
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
 			this.ResumeLayout(false);
 

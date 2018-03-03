@@ -61,6 +61,11 @@ namespace Space.Objects
 			Shape.Origin = new Vector2f(Radius, Radius);
 			return Shape;
 		}
+
+		internal static void Click()
+		{
+			Console.WriteLine("I am the sun yes");
+		}
 	}
 
 	public class Structure
@@ -93,7 +98,7 @@ namespace Space.Objects
 			CurrentSpeed = 0;
 			ShipName = string.Empty;
 			Shape = new CircleShape();
-	}
+		}
 	}
 
 	public class Planet
@@ -110,6 +115,11 @@ namespace Space.Objects
 		public float DistanceFromStar { get; set; }
 		public byte OrbialDirection { get; set; }
 		public CircleShape Shape { get; set; }
+
+		internal void Click()
+		{
+			Velocity *= 2;
+		}
 
 		public Planet()
 		{
@@ -178,6 +188,11 @@ namespace Space.Objects
 			Shape.Radius = MoonRadius;
 			Shape.Position = new Vector2f(Position[0], Position[1]);
 			return Shape;
+		}
+
+		internal void Click()
+		{
+			Velocity *= 2;
 		}
 	}
 

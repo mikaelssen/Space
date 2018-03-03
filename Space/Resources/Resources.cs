@@ -8,12 +8,12 @@ using SFML.Graphics;
 
 namespace Space.Resources
 {
-	static class Resources
+	static public class Resources
 	{
 
-		public static Random rng = new Random();
+		static public Random rng = new Random();
 		static public List<string> Names = File.ReadAllLines("./Resources/Names.txt").ToList();
-		static public Font font = new Font("./Resources/Barrio-Regular.otf");
+		static public Font Font = new Font("./Resources/Barrio-Regular.otf");
 
 	}
 }

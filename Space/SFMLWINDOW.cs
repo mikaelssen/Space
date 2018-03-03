@@ -86,17 +86,32 @@ class SFMLWindow
 
 	private void Renderwindow_MousePressed(object sender, MouseButtonEventArgs e)
 	{
+		SolarSystem sys = Game.Systems[0];
 		if (e.Button == Mouse.Button.Left)
 		{
 			v = renderwindow.MapPixelToCoords(new Vector2i(e.X, e.Y), view);
+
 			Console.WriteLine($"X:{v.X} Y:{v.Y}");
+
+			if (sys.Star.Shape.GetGlobalBounds().Contains(v.X, v.Y))
+				Star.Click();
+
+			foreach (var planet in sys.Planets)
+			{
+				if (planet.Shape.GetGlobalBounds().Contains(v.X, v.Y))
+					planet.Click();
+
+				foreach (var moon in planet.Moons)
+					if (moon.Shape.GetGlobalBounds().Contains(v.X, v.Y))
+						moon.Click();
+			}
 		}
 
 	}
 
 	private void Renderwindow_KeyPressed(object sender, SFML.Window.KeyEventArgs e)
 	{
-		int speed = 50;
+		int speed = 500;
 		//move the view
 		if (e.Code == Keyboard.Key.A)
 			view.Move(new Vector2f(-speed, 0));
@@ -122,15 +137,14 @@ class SFMLWindow
 		renderwindow.SetView(view);
 
 		SolarSystem sys = Game.Systems[0];
-
-
+		
 		//mouse cord testing
 		renderwindow.Draw(new CircleShape()
 		{
-			Radius = 50,
+			Radius = 5,
 			FillColor = Color.Magenta,
 			Position = v,
-			Origin = new Vector2f(50, 50)
+			Origin = new Vector2f(5, 5)
 		});
 
 		//sun
@@ -151,6 +165,11 @@ class SFMLWindow
 				OutlineThickness = 10
 			});
 
+
+			planet.Text.Position = new Vector2f(planet.Position[0] + planet.Shape.Radius,planet.Position[1] + planet.Shape.Radius);
+			planet.Text.Scale = new Vector2f(16,16);
+			renderwindow.Draw(planet.Text);
+
 			//planet
 			planet.GetDrawable();
 			renderwindow.Draw(planet.Shape);
@@ -170,25 +189,15 @@ class SFMLWindow
 					OutlineThickness = 10
 				});
 
+				moon.Text.Position = new Vector2f(moon.Position[0] + moon.Shape.Radius, moon.Position[1] + moon.Shape.Radius);
+				moon.Text.Scale = new Vector2f(16, 16);
+				renderwindow.Draw(moon.Text);
+
 				//moon
 				renderwindow.Draw(moon.GetDrawable(MoonRadius));
 
-#if DEBUG
-				//Draw moon relation lines
-				//VertexArray moontoplanetline = new VertexArray(PrimitiveType.LinesStrip, 0);
-				//moontoplanetline.Append(new Vertex(new Vector2f(planet.Position[0], planet.Position[1])));
-				//moontoplanetline.Append(new Vertex(new Vector2f(moon.Position[0],moon.Position[1])));
-				//renderwindow.Draw(moontoplanetline);
-#endif
 			}
 
-#if DEBUG
-			//lines to planets, THis is only compiled to debug version
-			//VertexArray planetcenterline = new VertexArray(PrimitiveType.LinesStrip, 0);
-			//planetcenterline.Append(new Vertex(new Vector2f(planet.Position[0], planet.Position[1])));
-			//planetcenterline.Append(new Vertex(new Vector2f(0,0)));
-			//renderwindow.Draw(planetcenterline);
-#endif
 		}
 #if DEBUG
 		//tracks one moon may crash if there is no moon

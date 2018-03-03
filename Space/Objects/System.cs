@@ -20,6 +20,8 @@ namespace Space.Objects
 		public List<Ship> Ships { get; set; }
 		public List<Structure> Structures { get; set; }
 		public Star Star { get; set; }
+		public Text Text { get; set; }
+
 
 		public SolarSystem()
 		{
@@ -29,6 +31,7 @@ namespace Space.Objects
 			Ships = new List<Ship>();
 			Structures = new List<Structure>();
 			JumpPoints = new List<JumpPoint>();
+			Text = new Text($"System {Id}", Resources.Resources.Font);
 		}
 
 	}
@@ -39,8 +42,8 @@ namespace Space.Objects
 		public string Name { get; set; }
 		public int Size { get; set; }
 		public double Mass { get; set; }
-
 		public CircleShape Shape { get; set; }
+		public Text Text { get; set; }
 
 		//TODO Random this a bit more.
 		public Star()
@@ -52,6 +55,8 @@ namespace Space.Objects
 				FillColor = Color.Yellow,
 				Position = new Vector2f(0, 0),
 			};
+			Name = Names.GetRandomName();
+			Text = new Text($"{Name}", Resources.Resources.Font);
 		}
 
 		public Drawable GetDrawable()
@@ -60,6 +65,11 @@ namespace Space.Objects
 			Shape.Radius = Radius;
 			Shape.Origin = new Vector2f(Radius, Radius);
 			return Shape;
+		}
+
+		internal static void Click()
+		{
+			Console.WriteLine("I am the sun yes");
 		}
 	}
 
@@ -86,6 +96,8 @@ namespace Space.Objects
 		public int CurrentSpeed { get; set; }
 		public string ShipName { get; set; }
 		public CircleShape Shape { get; set; }
+		public string Name { get; set; }
+		public Text Text { get; set; }
 
 		public Ship()
 		{
@@ -93,7 +105,9 @@ namespace Space.Objects
 			CurrentSpeed = 0;
 			ShipName = string.Empty;
 			Shape = new CircleShape();
-	}
+			Name = $"Ship: {Names.GetRandomName()}";
+			Text = new Text($"{Name}", Resources.Resources.Font);
+		}
 	}
 
 	public class Planet
@@ -110,6 +124,12 @@ namespace Space.Objects
 		public float DistanceFromStar { get; set; }
 		public byte OrbialDirection { get; set; }
 		public CircleShape Shape { get; set; }
+		public Text Text { get; set; }
+
+		internal void Click()
+		{
+			Velocity *= 2;
+		}
 
 		public Planet()
 		{
@@ -121,7 +141,8 @@ namespace Space.Objects
 			Velocity = 30000;
 			Bearing = 5000;
 			DistanceFromStar = 150000;//in thousands km
-			Name = string.Empty;
+			Name = Names.GetRandomName();
+			Text = new Text($"{Name}", Space.Resources.Resources.Font);
 			Moons = new List<Moon>();
 			OrbialDirection = (byte)Game.rng.Next(0, 1);
 
@@ -154,6 +175,7 @@ namespace Space.Objects
 		public double Velocity { get; internal set; }
 		public byte OrbialDirection { get; internal set; }
 		public CircleShape Shape { get; set; }
+		public Text Text { get; set; }
 
 		public Moon()
 		{
@@ -164,7 +186,9 @@ namespace Space.Objects
 			Density = 3344;
 			Mass = 70000000; //In trillion tonnes
 			Size = 0;
-			Name = string.Empty;
+			Name = Names.GetRandomName();
+			Text = new Text($"{Name}", Space.Resources.Resources.Font);
+
 			OrbialDirection = (byte)Game.rng.Next(0, 1);
 			Shape = new CircleShape()
 			{
@@ -178,6 +202,11 @@ namespace Space.Objects
 			Shape.Radius = MoonRadius;
 			Shape.Position = new Vector2f(Position[0], Position[1]);
 			return Shape;
+		}
+
+		internal void Click()
+		{
+			Velocity *= 2;
 		}
 	}
 

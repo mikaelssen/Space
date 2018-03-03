@@ -6,7 +6,7 @@ using SFML.Window;
 
 class SFMLWindow
 {
-	
+
 	public DrawingSurface rendersurface;
 	RenderWindow renderwindow;
 	System.Windows.Forms.Form form;
@@ -35,8 +35,8 @@ class SFMLWindow
 
 		if (Game.Systems.Count <= 0)
 			//Game.LoadGame();
-		if (Game.Systems.Count <= 0) //if no game to load we make a game
-			Game.NewGame();
+			if (Game.Systems.Count <= 0) //if no game to load we make a game
+				Game.NewGame();
 
 
 		rendersurface = new DrawingSurface// our control for SFML to draw on
@@ -68,7 +68,7 @@ class SFMLWindow
 			renderwindow.DispatchEvents(); // handle SFML events - NOTE this is still required when SFML is hosted in another window
 
 			Game.Update(ticksize);
-			
+
 			Draw();
 
 			renderwindow.Display(); // display what SFML has drawn to the screen
@@ -129,19 +129,17 @@ class SFMLWindow
 			ticksize = ticksize + 24;
 		if (e.Code == Keyboard.Key.G)
 			ticksize = ticksize - 24;
-        if (e.Code == Keyboard.Key.K)
-            moonpathline.Clear();
-    }
+		if (e.Code == Keyboard.Key.K)
+			moonpathline.Clear();
+	}
 
 	public void Draw()
 	{
-        //set view
+		//set view
 		renderwindow.SetView(view);
-        form.Text = string.Format("ticksize = {0}  time =  ", ticksize);
-        SolarSystem sys = Game.Systems[0];
-
+		form.Text = string.Format("ticksize = {0}  time =  ", ticksize);
 		SolarSystem sys = Game.Systems[0];
-		
+
 		//mouse cord testing
 		renderwindow.Draw(new CircleShape()
 		{
@@ -170,8 +168,8 @@ class SFMLWindow
 			});
 
 
-			planet.Text.Position = new Vector2f(planet.Position[0] + planet.Shape.Radius,planet.Position[1] + planet.Shape.Radius);
-			planet.Text.Scale = new Vector2f(16,16);
+			planet.Text.Position = new Vector2f(planet.Position[0] + planet.Shape.Radius, planet.Position[1] + planet.Shape.Radius);
+			planet.Text.Scale = new Vector2f(16, 16);
 			renderwindow.Draw(planet.Text);
 
 			//planet

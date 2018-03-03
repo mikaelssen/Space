@@ -11,7 +11,7 @@ class SFMLWindow
 	RenderWindow renderwindow;
 	System.Windows.Forms.Form form;
 	View view;
-	int tickspeed = 1;
+	int ticksize = 1;
 	Vector2f v = new Vector2f();
 
 #if DEBUG
@@ -67,7 +67,7 @@ class SFMLWindow
 
 			renderwindow.DispatchEvents(); // handle SFML events - NOTE this is still required when SFML is hosted in another window
 
-			Game.Update(tickspeed);
+			Game.Update(ticksize);
 			
 			Draw();
 
@@ -126,15 +126,19 @@ class SFMLWindow
 		if (e.Code == Keyboard.Key.F)
 			view.Zoom(0.5f);
 		if (e.Code == Keyboard.Key.T)
-			tickspeed++;
+			ticksize = ticksize + 24;
 		if (e.Code == Keyboard.Key.G)
-			tickspeed--;
-	}
+			ticksize = ticksize - 24;
+        if (e.Code == Keyboard.Key.K)
+            moonpathline.Clear();
+    }
 
 	public void Draw()
 	{
-		//set view
+        //set view
 		renderwindow.SetView(view);
+        form.Text = string.Format("ticksize = {0}  time =  ", ticksize);
+        SolarSystem sys = Game.Systems[0];
 
 		SolarSystem sys = Game.Systems[0];
 		

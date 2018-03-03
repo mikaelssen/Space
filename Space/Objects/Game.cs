@@ -18,30 +18,27 @@ namespace Space.Objects
 
 		public static void NewGame()
 		{
-			Systems = new List<SolarSystem>();
-			liteDB.DropCollection("systems");
-			var col = liteDB.GetCollection<SolarSystem>("systems");
-
-			Systems.Add(NewSystem());
-			col.Insert(systems);
-			LoadGame();
-			foreach (var item in Systems)
+			Systems = new List<SolarSystem>
 			{
-				foreach (var planet in item.Planets)
-				{
-					Debug.WriteLine(planet.Name);
-				}
-			}
+				NewSystem()
+			};
+
+			liteDB.DropCollection("systems");
+			liteDB.GetCollection<SolarSystem>("systems").Insert(systems);
+
+
+			//LoadGame(); 
+		
 			//col.EnsureIndex(x => x.Id); //sets ID to track
 		}
 
 		public static void LoadGame()
 		{
-			Systems = new List<SolarSystem>();
-			var col = liteDB.GetCollection<SolarSystem>("systems");
-			Systems = col.FindAll().ToList();
 
-			Debug.WriteLine($"Loaded systems {col.Count()}");
+			//TODO FIX DRAWABLE ACSESS ERROR WHEN LOADING. WILL TAKE A LOT OF WORK, MIK TASK
+			Systems = new List<SolarSystem>();
+			Systems =  liteDB.GetCollection<SolarSystem>("systems").FindAll().ToList();
+			Debug.WriteLine($"Loaded systems {Systems.Count()}");
 
 		}
 

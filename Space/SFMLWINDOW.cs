@@ -1,4 +1,5 @@
 ﻿using Space.Objects;
+using Space.Globals;
 using System;
 using SFML.Graphics;
 using SFML.System;
@@ -68,6 +69,7 @@ class SFMLWindow
 			renderwindow.DispatchEvents(); // handle SFML events - NOTE this is still required when SFML is hosted in another window
 
 			Game.Update(ticksize);
+            Globals.Date = Globals.Date + ticksize;
 
 			Draw();
 
@@ -126,9 +128,9 @@ class SFMLWindow
 		if (e.Code == Keyboard.Key.F)
 			view.Zoom(0.5f);
 		if (e.Code == Keyboard.Key.T)
-			ticksize = ticksize + 24;
+			ticksize = ticksize + 1;
 		if (e.Code == Keyboard.Key.G)
-			ticksize = ticksize - 24;
+			ticksize = ticksize - 1;
 		if (e.Code == Keyboard.Key.K)
 			moonpathline.Clear();
 	}
@@ -137,7 +139,14 @@ class SFMLWindow
 	{
 		//set view
 		renderwindow.SetView(view);
-		form.Text = string.Format("ticksize = {0}  time =  ", ticksize);
+        int hour,day, year;
+
+        year = (int)Globals.Date / 8760;
+        day = (int)(Globals.Date - year * 8760) / 24;
+        hour = (int)(Globals.Date - (year * 8760) - (day * 24));
+
+
+        form.Text = string.Format("ticksize = {0}  year {1}  day {2}  hour {3}", ticksize, year,day,hour);
 		SolarSystem sys = Game.Systems[0];
 
 		//mouse cord testing
@@ -154,14 +163,11 @@ class SFMLWindow
 
 		foreach (var planet in sys.Planets)
 		{
-
-			float Radius = planet.Size / 500;
-
-			//orbit path //TODO add orbits as a function? X Y Distance
-			renderwindow.Draw(new CircleShape(planet.DistanceFromStar / 100)
+            //orbit path //TODO add orbits as a function? X Y Distance
+            renderwindow.Draw(new CircleShape(planet.DistanceFromStar / 100)
 			{
 				Position = new Vector2f(0, 0),
-				Origin = new Vector2f(planet.DistanceFromStar / 100, planet.DistanceFromStar / 100), //center of point
+				Origin = new Vector2f(planet.DistanceFromStar / 100, planet.DistanceFromStar / 100), //center of point                
 				OutlineColor = Color.Green,
 				FillColor = Color.Transparent,
 				OutlineThickness = 10
@@ -172,20 +178,25 @@ class SFMLWindow
 			planet.Text.Scale = new Vector2f(16, 16);
 			renderwindow.Draw(planet.Text);
 
-			//planet
-			planet.GetDrawable();
+            Text positiontext = new Text($"{planet.DistanceFromStar/150000}", Space.Resources.Resources.Font);
+            positiontext.Position = new Vector2f(planet.Position[0] + planet.Shape.Radius, planet.Position[1] + planet.Shape.Radius*4);
+            positiontext.Scale = new Vector2f(16, 16);
+            renderwindow.Draw(positiontext);
+
+            //planet
+            planet.GetDrawable();
 			renderwindow.Draw(planet.Shape);
 
 
 			foreach (var moon in planet.Moons)
 			{
-				float MoonRadius = planet.Size / 500;
+				float MoonRadius = moon.Size/10;
 
 				//moon orbits
-				renderwindow.Draw(new CircleShape(moon.DistanceFromPlanet / 5000)
+				renderwindow.Draw(new CircleShape(moon.DistanceFromPlanet / 2500)
 				{
 					Position = new Vector2f(planet.Position[0], planet.Position[1]),
-					Origin = new Vector2f(moon.DistanceFromPlanet / 5000, moon.DistanceFromPlanet / 5000), //center of point
+					Origin = new Vector2f(moon.DistanceFromPlanet / 2500, moon.DistanceFromPlanet / 2500), //center of point
 					OutlineColor = Color.Yellow,
 					FillColor = Color.Transparent,
 					OutlineThickness = 10

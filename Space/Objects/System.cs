@@ -119,7 +119,7 @@ namespace Space.Objects
 		public double Mass { get; set; } //Star mass should be about 330 000 times more than planet mass for sun earth ratio 
 		public int Density { get; set; }//Object density earth is about 5515, juptier 1326, our moon is 3344 (kg/m^3)
 		public string Name { get; set; }
-		public List<Moon> Moons { get; set; }
+        public List<Moon> Moons { get; set; }
 		public double Velocity { get; set; } //In M/s
 		public double Bearing { get; set; }
 		public float DistanceFromStar { get; set; }
@@ -145,7 +145,7 @@ namespace Space.Objects
 			Mass = 600000000; //In trillion tonnes
 			Velocity = 30000;
 			Bearing = 5000;
-			DistanceFromStar = 150000;//in thousands km
+			DistanceFromStar = 150000;//in *1000km
 			Name = Names.GetRandomName();
 			Text = new Text($"{Name}", Space.Resources.Resources.Font);
 			Moons = new List<Moon>();
@@ -159,7 +159,7 @@ namespace Space.Objects
 
 		public Drawable GetDrawable()
 		{
-			float Radius = Size / 500;
+			float Radius = Size / 2500;
 			Shape.Origin = new Vector2f(Radius, Radius);
 			Shape.Position = new Vector2f(Position[0], Position[1]);
 			Shape.Radius = Radius;

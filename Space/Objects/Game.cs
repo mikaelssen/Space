@@ -60,9 +60,9 @@ namespace Space.Objects
 					//TODO implement direction, so they go the other way sometimes
 					//byte direction = planet.OrbialDirection;
 
-					double circumference = (2 * orbit * Math.PI);
+					double circumference = Math.Round(2 * orbit * Math.PI);
 
-                    bearing = bearing + (((velocity*3600)/circumference)/36000000)* ticksize;
+                    bearing = bearing + (360/(circumference*1000/(velocity*3.6)))*ticksize;
 					if (bearing > 360) { bearing = bearing - 360; }
 					planet.Bearing = bearing;
                 
@@ -76,14 +76,14 @@ namespace Space.Objects
 						double moonvelocity = moon.Velocity;
 						double moonorbit = moon.DistanceFromPlanet;
 						//byte moondirection = moon.OrbialDirection;
-						double mooncircumference = (2 * moonorbit * Math.PI);
+						double mooncircumference = Math.Round(2 * moonorbit * Math.PI);
 
-                        moonbearing = moonbearing + ((((moonvelocity * 3600) / 1) / mooncircumference) / 360)* ticksize;
+                        moonbearing = moonbearing + (360/(mooncircumference/(moonvelocity*3.6)))*ticksize;
 						if (moonbearing > 360) { moonbearing = moonbearing - 360; }
 						moon.Bearing = moonbearing;
 
-						moon.Position[0] = planet.Position[0] + (float)(moonorbit/5000 * Math.Sin(moonbearing * (Math.PI / 180.0))); //x
-						moon.Position[1] = planet.Position[1] + (float)(moonorbit/5000 * Math.Cos(moonbearing * (Math.PI / 180.0))); //y
+						moon.Position[0] = planet.Position[0] + (float)(moonorbit/2500 * Math.Sin(moonbearing * (Math.PI / 180.0))); //x
+						moon.Position[1] = planet.Position[1] + (float)(moonorbit/2500 * Math.Cos(moonbearing * (Math.PI / 180.0))); //y
 					}
 				}
 				
@@ -98,7 +98,7 @@ namespace Space.Objects
 		/// <returns>System</returns>
 		private static SolarSystem NewSystem()
 		{
-
+            Globals.Globals.Date = 0;
 			SolarSystem system = new SolarSystem
 			{
 				Star = new Star()
@@ -115,8 +115,9 @@ namespace Space.Objects
 					Resources = new List<Resource>(),
 					Bearing = rng.Next(0, 360),
 					Density = rng.Next(1000, 7000),
-					DistanceFromStar = rng.Next(50000, 2000000)
-				};
+                    DistanceFromStar = rng.Next(50000, 2000000)
+                    
+                };
 
 				//this one is special, leave outside initial generation	
 				planet.Mass = Math.Round(Math.Pow(planet.Size / 2, 3) * 314 * 75 / 5500000000 * planet.Density);
@@ -134,8 +135,8 @@ namespace Space.Objects
 						Density = rng.Next(3000, 5000),
 						Bearing = rng.Next(0, 360)
 					};
-					moon.DistanceFromPlanet = moon.Size + planet.Size * 10 + rng.Next(60000, 10000000);
-					moon.Mass = Math.Round(Math.Pow(moon.Size / 2, 3) * 314 * 75 / 5500000000 * moon.Density);
+                    moon.DistanceFromPlanet = moon.Size + planet.Size * 10 + rng.Next(60000, 10000000);
+                    moon.Mass = Math.Round(Math.Pow(moon.Size / 2, 3) * 314 * 75 / 5500000000 * moon.Density);
 					moon.Velocity = Math.Round(Math.Sqrt((10 * (moon.Mass + planet.Mass)) / moon.DistanceFromPlanet));
 					moonsperplanet.Add(moon);
 				}

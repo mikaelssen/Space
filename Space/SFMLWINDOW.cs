@@ -19,9 +19,10 @@ class SFMLWindow
     Stopwatch ticktimer = new Stopwatch();
     long tickmicros;
     Vector2f v = new Vector2f();
+    Vector2f mousedrag = new Vector2f();
 
 #if DEBUG
-	VertexArray moonpathline = new VertexArray(PrimitiveType.LinesStrip, 0);
+    VertexArray moonpathline = new VertexArray(PrimitiveType.LinesStrip, 0);
 #endif
 
 	public SFMLWindow()
@@ -63,6 +64,7 @@ class SFMLWindow
 		//event handler for keys
 		renderwindow.KeyPressed += Renderwindow_KeyPressed;
 		renderwindow.MouseButtonPressed += Renderwindow_MousePressed;
+        renderwindow.MouseButtonReleased += Renderwindow_MouseReleased;
         int hour, day, year;
         // drawing loop
         while (form.Visible) // loop while the window is open
@@ -106,32 +108,44 @@ class SFMLWindow
 		}
 	}
 
-	private void Renderwindow_MousePressed(object sender, MouseButtonEventArgs e)
-	{
-		SolarSystem sys = Game.Systems[0];
-		if (e.Button == Mouse.Button.Left)
-		{
-			v = renderwindow.MapPixelToCoords(new Vector2i(e.X, e.Y), view);
+    private void Renderwindow_MousePressed(object sender, MouseButtonEventArgs e)
+    {
+        SolarSystem sys = Game.Systems[0];
+        if (e.Button == Mouse.Button.Left)
+        {
+            v = renderwindow.MapPixelToCoords(new Vector2i(e.X, e.Y), view);
 
-			Console.WriteLine($"X:{v.X} Y:{v.Y}");
+            Console.WriteLine($"X:{v.X} Y:{v.Y}");
 
-			if (sys.Star.Shape.GetGlobalBounds().Contains(v.X, v.Y))
-				Star.Click();
+            if (sys.Star.Shape.GetGlobalBounds().Contains(v.X, v.Y))
+                Star.Click();
 
-			foreach (var planet in sys.Planets)
-			{
-				if (planet.Shape.GetGlobalBounds().Contains(v.X, v.Y))
-					planet.Click();
+            foreach (var planet in sys.Planets)
+            {
+                if (planet.Shape.GetGlobalBounds().Contains(v.X, v.Y))
+                    planet.Click();
 
-				foreach (var moon in planet.Moons)
-					if (moon.Shape.GetGlobalBounds().Contains(v.X, v.Y))
-						moon.Click();
-			}
-		}
+                foreach (var moon in planet.Moons)
+                    if (moon.Shape.GetGlobalBounds().Contains(v.X, v.Y))
+                        moon.Click();
+            }
+        }
+        if (e.Button == Mouse.Button.Middle)
+        {
+            mousedrag = renderwindow.MapPixelToCoords(new Vector2i(e.X, e.Y), view);
+        }
+    }
+    private void Renderwindow_MouseReleased(object sender, MouseButtonEventArgs e)
+    {
+        SolarSystem sys = Game.Systems[0];
+        if (e.Button == Mouse.Button.Middle)
+        {
+            mousedrag = mousedrag - renderwindow.MapPixelToCoords(new Vector2i(e.X, e.Y), view);
+            view.Move(mousedrag);
+        }
+    }
 
-	}
-
-	private void Renderwindow_KeyPressed(object sender, SFML.Window.KeyEventArgs e)
+    private void Renderwindow_KeyPressed(object sender, SFML.Window.KeyEventArgs e)
 	{
 		int speed = 500;
 		//move the view

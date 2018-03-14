@@ -122,8 +122,10 @@ namespace Space.Objects
         public List<Moon> Moons { get; set; }
 		public double Velocity { get; set; } //In M/s
 		public double Bearing { get; set; }
-		public float DistanceFromStar { get; set; }
-		public byte OrbialDirection { get; set; }
+        public double BearingDV { get; set; }
+        public float DistanceFromStar { get; set; }
+        public double Circumference { get; set; }
+        public byte OrbialDirection { get; set; }
 		public CircleShape Shape { get; set; }
 
 		internal void Update()
@@ -171,13 +173,15 @@ namespace Space.Objects
 	{
 		public float[] Position { get; set; }
 		public float DistanceFromPlanet { get; set; }
-		public List<Resource> Resources { get; set; }
+        public double Circumference { get; set; }
+        public List<Resource> Resources { get; set; }
 		public int Size { get; set; }
 		public int Density { get; set; }//Object density earth is about 5515, juptier 1326, our moon is 3344 (kg/m^3)
 		public double Mass { get; set; }
 		public string Name { get; set; }
 		public double Bearing { get; internal set; }
-		public double Velocity { get; internal set; }
+        public double BearingDV { get; set; }
+        public double Velocity { get; internal set; }
 		public byte OrbialDirection { get; internal set; }
 		public CircleShape Shape { get; set; }
 

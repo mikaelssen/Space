@@ -1,6 +1,8 @@
 ﻿using Space.Objects;
 using Space.Globals;
 using System;
+using System.Threading;
+using System.Diagnostics;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
@@ -13,7 +15,10 @@ class SFMLWindow
 	System.Windows.Forms.Form form;
 	View view;
 	int ticksize = 1;
-	Vector2f v = new Vector2f();
+    int tickrate = 10, currenttickrate; //ticks per second
+    Stopwatch ticktimer = new Stopwatch();
+    long tickmicros;
+    Vector2f v = new Vector2f();
 
 #if DEBUG
 	VertexArray moonpathline = new VertexArray(PrimitiveType.LinesStrip, 0);
@@ -58,23 +63,38 @@ class SFMLWindow
 		//event handler for keys
 		renderwindow.KeyPressed += Renderwindow_KeyPressed;
 		renderwindow.MouseButtonPressed += Renderwindow_MousePressed;
-
-		// drawing loop
-		while (form.Visible) // loop while the window is open
+        int hour, day, year;
+        // drawing loop
+        while (form.Visible) // loop while the window is open
 		{
-			System.Windows.Forms.Application.DoEvents(); // handle form events
+            if (!ticktimer.IsRunning){ ticktimer.Start(); }//start ticktimer if not started
 
-			renderwindow.Clear(Color.Black); // clear our SFML RenderWindow
+            year = (int)Globals.Date / 8760;//Calculate year
+            day = (int)(Globals.Date - year * 8760) / 24;//Calculate day
+            hour = (int)(Globals.Date - (year * 8760) - (day * 24));//Calculate hour
 
-			renderwindow.DispatchEvents(); // handle SFML events - NOTE this is still required when SFML is hosted in another window
+            tickmicros = (ticktimer.ElapsedTicks / (Stopwatch.Frequency / (1000L * 1000L))); //convert to microseconds using timeticks and processor frequency
+            form.Text = string.Format("ticksize = {0}, tickrate {4}({5})  year {1}  day {2}  hour {3}", ticksize, year, day, hour,tickrate,currenttickrate);
+            
 
-			Game.Update(ticksize);
-            Globals.Date = Globals.Date + ticksize;
+            if (tickmicros > 1000000/tickrate) //do simulation after enought time
+            {
+                currenttickrate = (int)(1000000 / tickmicros); //calculate actuall tickrate
+                ticktimer.Restart(); //restart timer for next round
+                Game.Update(ticksize); // Update simulation
+                Globals.Date = Globals.Date + ticksize; // update date
+            }
 
-			Draw();
+            System.Windows.Forms.Application.DoEvents(); // handle form events 
 
-			renderwindow.Display(); // display what SFML has drawn to the screen
-		}
+            renderwindow.Clear(Color.Black); // clear our SFML RenderWindow 
+
+            renderwindow.DispatchEvents(); // handle SFML events - NOTE this is still required when SFML is hosted in another window 
+
+            Draw();
+
+            renderwindow.Display(); // display what SFML has drawn to the screen 
+        }
 	}
 
 	private void Form_Resize(object sender, EventArgs e)
@@ -133,20 +153,16 @@ class SFMLWindow
 			ticksize = ticksize - 1;
 		if (e.Code == Keyboard.Key.K)
 			moonpathline.Clear();
-	}
+        if (e.Code == Keyboard.Key.Y)
+            tickrate = tickrate + 10;
+        if (e.Code == Keyboard.Key.H & tickrate > 10)
+            tickrate = tickrate - 10;
+    }
 
 	public void Draw()
 	{
 		//set view
-		renderwindow.SetView(view);
-        int hour,day, year;
-
-        year = (int)Globals.Date / 8760;
-        day = (int)(Globals.Date - year * 8760) / 24;
-        hour = (int)(Globals.Date - (year * 8760) - (day * 24));
-
-
-        form.Text = string.Format("ticksize = {0}  year {1}  day {2}  hour {3}", ticksize, year,day,hour);
+		renderwindow.SetView(view);        
 		SolarSystem sys = Game.Systems[0];
 
 		//mouse cord testing

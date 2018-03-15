@@ -71,9 +71,9 @@ class SFMLWindow
 		{
             if (!ticktimer.IsRunning){ ticktimer.Start(); }//start ticktimer if not started
 
-            year = (int)Globals.Date / 8760;//Calculate year
-            day = (int)(Globals.Date - year * 8760) / 24;//Calculate day
-            hour = (int)(Globals.Date - (year * 8760) - (day * 24));//Calculate hour
+            year = Globals.Date.GetYear();
+            day = Globals.Date.GetYear();
+			hour = Globals.Date.GetHour() ;//Calculate hour
 
             tickmicros = (ticktimer.ElapsedTicks / (Stopwatch.Frequency / (1000L * 1000L))); //convert to microseconds using timeticks and processor frequency
             form.Text = string.Format("ticksize = {0}, tickrate {4}({5})  year {1}  day {2}  hour {3}", ticksize, year, day, hour,tickrate,currenttickrate);

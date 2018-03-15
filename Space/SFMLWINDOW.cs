@@ -1,5 +1,8 @@
 ﻿using Space.Objects;
+using Space.Globals;
 using System;
+using System.Threading;
+using System.Diagnostics;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
@@ -12,10 +15,14 @@ class SFMLWindow
 	System.Windows.Forms.Form form;
 	View view;
 	int ticksize = 1;
-	Vector2f v = new Vector2f();
+    int tickrate = 10, currenttickrate; //ticks per second
+    Stopwatch ticktimer = new Stopwatch();
+    long tickmicros;
+    Vector2f v = new Vector2f();
+    Vector2f mousedrag = new Vector2f();
 
 #if DEBUG
-	VertexArray moonpathline = new VertexArray(PrimitiveType.LinesStrip, 0);
+    VertexArray moonpathline = new VertexArray(PrimitiveType.LinesStrip, 0);
 #endif
 
 	public SFMLWindow()
@@ -57,22 +64,39 @@ class SFMLWindow
 		//event handler for keys
 		renderwindow.KeyPressed += Renderwindow_KeyPressed;
 		renderwindow.MouseButtonPressed += Renderwindow_MousePressed;
-
-		// drawing loop
-		while (form.Visible) // loop while the window is open
+        renderwindow.MouseButtonReleased += Renderwindow_MouseReleased;
+        int hour, day, year;
+        // drawing loop
+        while (form.Visible) // loop while the window is open
 		{
-			System.Windows.Forms.Application.DoEvents(); // handle form events
+            if (!ticktimer.IsRunning){ ticktimer.Start(); }//start ticktimer if not started
 
-			renderwindow.Clear(Color.Black); // clear our SFML RenderWindow
+            year = Globals.Date.GetYear();
+            day = Globals.Date.GetYear();
+			hour = Globals.Date.GetHour() ;//Calculate hour
 
-			renderwindow.DispatchEvents(); // handle SFML events - NOTE this is still required when SFML is hosted in another window
+            tickmicros = (ticktimer.ElapsedTicks / (Stopwatch.Frequency / (1000L * 1000L))); //convert to microseconds using timeticks and processor frequency
+            form.Text = string.Format("ticksize = {0}, tickrate {4}({5})  year {1}  day {2}  hour {3}", ticksize, year, day, hour,tickrate,currenttickrate);
+            
 
-			Game.Update(ticksize);
+            if (tickmicros > 1000000/tickrate) //do simulation after enought time
+            {
+                currenttickrate = (int)(1000000 / tickmicros); //calculate actuall tickrate
+                ticktimer.Restart(); //restart timer for next round
+                Game.Update(ticksize); // Update simulation
+                Globals.Date += ticksize; // update date
+            }
 
-			Draw();
+            System.Windows.Forms.Application.DoEvents(); // handle form events 
 
-			renderwindow.Display(); // display what SFML has drawn to the screen
-		}
+            renderwindow.Clear(Color.Black); // clear our SFML RenderWindow 
+
+            renderwindow.DispatchEvents(); // handle SFML events - NOTE this is still required when SFML is hosted in another window 
+
+            Draw();
+
+            renderwindow.Display(); // display what SFML has drawn to the screen 
+        }
 	}
 
 	private void Form_Resize(object sender, EventArgs e)
@@ -84,32 +108,44 @@ class SFMLWindow
 		}
 	}
 
-	private void Renderwindow_MousePressed(object sender, MouseButtonEventArgs e)
-	{
-		SolarSystem sys = Game.Systems[0];
-		if (e.Button == Mouse.Button.Left)
-		{
-			v = renderwindow.MapPixelToCoords(new Vector2i(e.X, e.Y), view);
+    private void Renderwindow_MousePressed(object sender, MouseButtonEventArgs e)
+    {
+        SolarSystem sys = Game.Systems[0];
+        if (e.Button == Mouse.Button.Left)
+        {
+            v = renderwindow.MapPixelToCoords(new Vector2i(e.X, e.Y), view);
 
-			Console.WriteLine($"X:{v.X} Y:{v.Y}");
+            Console.WriteLine($"X:{v.X} Y:{v.Y}");
 
-			if (sys.Star.Shape.GetGlobalBounds().Contains(v.X, v.Y))
-				Star.Click();
+            if (sys.Star.Shape.GetGlobalBounds().Contains(v.X, v.Y))
+                Star.Click();
 
-			foreach (var planet in sys.Planets)
-			{
-				if (planet.Shape.GetGlobalBounds().Contains(v.X, v.Y))
-					planet.Click();
+            foreach (var planet in sys.Planets)
+            {
+                if (planet.Shape.GetGlobalBounds().Contains(v.X, v.Y))
+                    planet.Click();
 
-				foreach (var moon in planet.Moons)
-					if (moon.Shape.GetGlobalBounds().Contains(v.X, v.Y))
-						moon.Click();
-			}
-		}
+                foreach (var moon in planet.Moons)
+                    if (moon.Shape.GetGlobalBounds().Contains(v.X, v.Y))
+                        moon.Click();
+            }
+        }
+        if (e.Button == Mouse.Button.Middle)
+        {
+            mousedrag = renderwindow.MapPixelToCoords(new Vector2i(e.X, e.Y), view); //get mouse cord when pressed
+        }
+    }
+    private void Renderwindow_MouseReleased(object sender, MouseButtonEventArgs e) //event a mouse button was released
+    {
+        SolarSystem sys = Game.Systems[0];
+        if (e.Button == Mouse.Button.Middle)
+        {
+            mousedrag = mousedrag - renderwindow.MapPixelToCoords(new Vector2i(e.X, e.Y), view); //calculate how far the  mouse moved
+            view.Move(mousedrag); //move view that distance
+        }
+    }
 
-	}
-
-	private void Renderwindow_KeyPressed(object sender, SFML.Window.KeyEventArgs e)
+    private void Renderwindow_KeyPressed(object sender, SFML.Window.KeyEventArgs e)
 	{
 		int speed = 500;
 		//move the view
@@ -126,18 +162,21 @@ class SFMLWindow
 		if (e.Code == Keyboard.Key.F)
 			view.Zoom(0.5f);
 		if (e.Code == Keyboard.Key.T)
-			ticksize = ticksize + 24;
+			ticksize = ticksize + 1;
 		if (e.Code == Keyboard.Key.G)
-			ticksize = ticksize - 24;
+			ticksize = ticksize - 1;
 		if (e.Code == Keyboard.Key.K)
 			moonpathline.Clear();
-	}
+        if (e.Code == Keyboard.Key.Y)
+            tickrate = tickrate + 10;
+        if (e.Code == Keyboard.Key.H & tickrate > 10)
+            tickrate = tickrate - 10;
+    }
 
 	public void Draw()
 	{
 		//set view
 		renderwindow.SetView(view);
-		form.Text = string.Format("ticksize = {0}  time =  ", ticksize);
 		SolarSystem sys = Game.Systems[0];
 
 		//mouse cord testing
@@ -154,14 +193,11 @@ class SFMLWindow
 
 		foreach (var planet in sys.Planets)
 		{
-
-			float Radius = planet.Size / 500;
-
-			//orbit path //TODO add orbits as a function? X Y Distance
-			renderwindow.Draw(new CircleShape(planet.DistanceFromStar / 100)
+            //orbit path //TODO add orbits as a function? X Y Distance
+            renderwindow.Draw(new CircleShape(planet.DistanceFromStar / 100)
 			{
 				Position = new Vector2f(0, 0),
-				Origin = new Vector2f(planet.DistanceFromStar / 100, planet.DistanceFromStar / 100), //center of point
+				Origin = new Vector2f(planet.DistanceFromStar / 100, planet.DistanceFromStar / 100), //center of point                
 				OutlineColor = Color.Green,
 				FillColor = Color.Transparent,
 				OutlineThickness = 10
@@ -172,20 +208,25 @@ class SFMLWindow
 			planet.Text.Scale = new Vector2f(16, 16);
 			renderwindow.Draw(planet.Text);
 
-			//planet
-			planet.GetDrawable();
+            Text positiontext = new Text($"{planet.DistanceFromStar/150000}", Space.Resources.Resources.Font);
+            positiontext.Position = new Vector2f(planet.Position[0] + planet.Shape.Radius, planet.Position[1] + planet.Shape.Radius*4);
+            positiontext.Scale = new Vector2f(16, 16);
+            renderwindow.Draw(positiontext);
+
+            //planet
+            planet.GetDrawable();
 			renderwindow.Draw(planet.Shape);
 
 
 			foreach (var moon in planet.Moons)
 			{
-				float MoonRadius = planet.Size / 500;
+				float MoonRadius = moon.Size/10;
 
 				//moon orbits
-				renderwindow.Draw(new CircleShape(moon.DistanceFromPlanet / 5000)
+				renderwindow.Draw(new CircleShape(moon.DistanceFromPlanet / 2500)
 				{
 					Position = new Vector2f(planet.Position[0], planet.Position[1]),
-					Origin = new Vector2f(moon.DistanceFromPlanet / 5000, moon.DistanceFromPlanet / 5000), //center of point
+					Origin = new Vector2f(moon.DistanceFromPlanet / 2500, moon.DistanceFromPlanet / 2500), //center of point
 					OutlineColor = Color.Yellow,
 					FillColor = Color.Transparent,
 					OutlineThickness = 10

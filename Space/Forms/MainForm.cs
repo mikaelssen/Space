@@ -30,7 +30,7 @@ namespace Space
 			Game.LoadGame();
 		}
 
-		private void toolStripButton1_Click(object sender, EventArgs e)
+		private void ToolStripButton1_Click(object sender, EventArgs e)
 		{
 			overview = new Planet_overview();
 			overview.Show();

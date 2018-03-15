@@ -115,7 +115,7 @@
 			this.toolStripButton1.Size = new System.Drawing.Size(61, 22);
 			this.toolStripButton1.Text = "OverView";
 			this.toolStripButton1.ToolTipText = "d";
-			this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
+			this.toolStripButton1.Click += new System.EventHandler(this.ToolStripButton1_Click);
 			// 
 			// MainForm
 			// 

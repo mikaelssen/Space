@@ -65,18 +65,13 @@ class SFMLWindow
 		renderwindow.KeyPressed += Renderwindow_KeyPressed;
 		renderwindow.MouseButtonPressed += Renderwindow_MousePressed;
         renderwindow.MouseButtonReleased += Renderwindow_MouseReleased;
-        int hour, day, year;
         // drawing loop
         while (form.Visible) // loop while the window is open
 		{
             if (!ticktimer.IsRunning){ ticktimer.Start(); }//start ticktimer if not started
-
-            year = Globals.Date.GetYear();
-            day = Globals.Date.GetYear();
-			hour = Globals.Date.GetHour() ;//Calculate hour
-
+			
             tickmicros = (ticktimer.ElapsedTicks / (Stopwatch.Frequency / (1000L * 1000L))); //convert to microseconds using timeticks and processor frequency
-            form.Text = string.Format("ticksize = {0}, tickrate {4}({5})  year {1}  day {2}  hour {3}", ticksize, year, day, hour,tickrate,currenttickrate);
+            form.Text = string.Format("ticksize = {0}, tickrate {4}({5})  year {1}  day {2}  hour {3}", ticksize, Globals.Date.GetYear(), Globals.Date.GetDay(), Globals.Date.GetHour(), tickrate,currenttickrate);
             
 
             if (tickmicros > 1000000/tickrate) //do simulation after enought time
@@ -84,7 +79,7 @@ class SFMLWindow
                 currenttickrate = (int)(1000000 / tickmicros); //calculate actuall tickrate
                 ticktimer.Restart(); //restart timer for next round
                 Game.Update(ticksize); // Update simulation
-                Globals.Date += ticksize; // update date
+                Globals.Date.Date += ticksize; // update date
             }
 
             System.Windows.Forms.Application.DoEvents(); // handle form events 
@@ -208,10 +203,12 @@ class SFMLWindow
 			planet.Text.Scale = new Vector2f(16, 16);
 			renderwindow.Draw(planet.Text);
 
-            Text positiontext = new Text($"{planet.DistanceFromStar/150000}", Space.Resources.Resources.Font);
-            positiontext.Position = new Vector2f(planet.Position[0] + planet.Shape.Radius, planet.Position[1] + planet.Shape.Radius*4);
-            positiontext.Scale = new Vector2f(16, 16);
-            renderwindow.Draw(positiontext);
+			Text positiontext = new Text($"{planet.DistanceFromStar / 150000}", Space.Resources.Resources.Font)
+			{
+				Position = new Vector2f(planet.Position[0] + planet.Shape.Radius, planet.Position[1] + planet.Shape.Radius * 4),
+				Scale = new Vector2f(16, 16)
+			};
+			renderwindow.Draw(positiontext);
 
             //planet
             planet.GetDrawable();

@@ -101,7 +101,7 @@ namespace Space.Objects
 		/// <returns>System</returns>
 		private static SolarSystem NewSystem()
 		{
-            Globals.Globals.Date = 0;
+            Globals.Globals.Date = new Globals.DateTime();
 			SolarSystem system = new SolarSystem
 			{
 				Star = new Star()

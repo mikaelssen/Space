@@ -84,7 +84,7 @@ class SFMLWindow
                 currenttickrate = (int)(1000000 / tickmicros); //calculate actuall tickrate
                 ticktimer.Restart(); //restart timer for next round
                 Game.Update(ticksize); // Update simulation
-                Globals.Date = Globals.Date + ticksize; // update date
+                Globals.Date += ticksize; // update date
             }
 
             System.Windows.Forms.Application.DoEvents(); // handle form events 
@@ -176,7 +176,7 @@ class SFMLWindow
 	public void Draw()
 	{
 		//set view
-		renderwindow.SetView(view);        
+		renderwindow.SetView(view);
 		SolarSystem sys = Game.Systems[0];
 
 		//mouse cord testing

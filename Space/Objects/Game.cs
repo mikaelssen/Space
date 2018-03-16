@@ -50,7 +50,6 @@ namespace Space.Objects
 		{
 			foreach (var Sys in systems)
 			{
-				
 				foreach (var planet in Sys.Planets)
 				{
 					double bearing = planet.Bearing;
@@ -110,6 +109,7 @@ namespace Space.Objects
 			//planet generation
 			for (int i = 0; i < rng.Next(1, 10); i++)
 			{
+				
 				//planet
 				Planet planet = new Planet
 				{
@@ -122,8 +122,8 @@ namespace Space.Objects
                     
                 };
 
-                //this one is special, leave outside initial generation
-                planet.Circumference = Math.Round(2 * planet.DistanceFromStar * Math.PI);
+				//this one is special, leave outside initial generation
+				planet.Circumference = Math.Round(2 * planet.DistanceFromStar * Math.PI);
                 planet.Mass = Math.Round(Math.Pow(planet.Size / 2, 3) * 314 * 75 / 5500000000 * planet.Density);
 				planet.Velocity = Math.Round(Math.Sqrt((10 * (system.Star.Mass + planet.Mass)) / (planet.DistanceFromStar * 10)));
                 planet.BearingDV = (360 / (planet.Circumference * 1000 / (planet.Velocity * 3.6)));
@@ -147,10 +147,12 @@ namespace Space.Objects
                     moonsperplanet.Add(moon);
 				}
 				planet.Moons.AddRange(moonsperplanet); //add moons to planet
-
+				
 				system.Planets.Add(planet);
 			}
 
+			system.Planets.FirstOrDefault().Population = 200000000;
+			system.Planets.FirstOrDefault().Owner = (int)Globals.Ownership.PLAYER;
 
 			//asteroid generation
 			//TODO this asteroid stuff

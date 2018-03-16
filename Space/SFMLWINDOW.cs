@@ -1,7 +1,6 @@
 ﻿using Space.Objects;
 using Space.Globals;
 using System;
-using System.Threading;
 using System.Diagnostics;
 using SFML.Graphics;
 using SFML.System;
@@ -200,13 +199,13 @@ class SFMLWindow
 
 
 			planet.Text.Position = new Vector2f(planet.Position[0] + planet.Shape.Radius, planet.Position[1] + planet.Shape.Radius);
-			planet.Text.Scale = new Vector2f(16, 16);
+			planet.Text.Scale = new Vector2f(8, 8);
 			renderwindow.Draw(planet.Text);
 
 			Text positiontext = new Text($"{planet.DistanceFromStar / 150000}", Space.Resources.Resources.Font)
 			{
-				Position = new Vector2f(planet.Position[0] + planet.Shape.Radius, planet.Position[1] + planet.Shape.Radius * 4),
-				Scale = new Vector2f(16, 16)
+				Position = new Vector2f(planet.Position[0] + planet.Shape.Radius, planet.Position[1] + planet.Shape.Radius * 10),
+				Scale = new Vector2f(8, 8)
 			};
 			renderwindow.Draw(positiontext);
 
@@ -226,11 +225,11 @@ class SFMLWindow
 					Origin = new Vector2f(moon.DistanceFromPlanet / 2500, moon.DistanceFromPlanet / 2500), //center of point
 					OutlineColor = Color.Yellow,
 					FillColor = Color.Transparent,
-					OutlineThickness = 10
+					OutlineThickness = 5
 				});
 
 				moon.Text.Position = new Vector2f(moon.Position[0] + moon.Shape.Radius, moon.Position[1] + moon.Shape.Radius);
-				moon.Text.Scale = new Vector2f(16, 16);
+				moon.Text.Scale = new Vector2f(8, 8);
 				renderwindow.Draw(moon.Text);
 
 				//moon

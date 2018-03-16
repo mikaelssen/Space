@@ -11,6 +11,8 @@ namespace Space.Objects
 	{
 		public Guid Guid { get; } = new Guid();
 		public Text Text { get; set; } = new Text("", Resources.Resources.Font);
+		public int Owner = 0;
+		public float Population = 0;
 	}
 
 
@@ -75,7 +77,7 @@ namespace Space.Objects
 		}
 	}
 
-	public class Structure : Entity
+	public class Structure
 	{
 		public Dictionary<Resource, int> Price { get; set; }
 		public Effect Effect { get; set; }
@@ -218,7 +220,7 @@ namespace Space.Objects
 		}
 	}
 
-	public class Resource : Entity
+	public class Resource 
 	{
 		public RESOURCETYPE Resourcename { get; set; }
 		public int Quantity { get; set; }
@@ -284,7 +286,7 @@ namespace Space.Objects
 		}
 	}
 
-	public class JumpPoint : Entity
+	public class JumpPoint 
 	{
 		[BsonId]
 		public Int32 Id { get; set; }
@@ -323,7 +325,18 @@ namespace Space.Objects
 		}
 	}
 
+	public class Type
+	{
 
+
+		public Type() { }
+
+		public Type(int idType, string TypeName, string TypeDesciption)
+		{
+
+		}
+	}
+	
 
 	public enum RESOURCETYPE { Critonite, Arkminium, Greberium, Cactuium, Quantinite, Entihnite, Houfium, Katerium, Mikerium, Peterium, Rigelium, Nuterite, zunbillium }
 							//Crito		Arkentosh  Greb		  Cactus	Quantum		Entih	   houfnice Kat		  Mikaelssen Pizzapete rigel	Coconutsales Zunbil

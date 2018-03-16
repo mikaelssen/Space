@@ -9,7 +9,10 @@ namespace Space.Globals
 	{
 		//static public double Date; //In hours
 		static public DateTime Date = new DateTime(); //In hours
+
+
 	}
 
-	
+	public enum Ownership {NEUTRAL, PLAYER, ENEMIES, FRIENDLY}
+
 }

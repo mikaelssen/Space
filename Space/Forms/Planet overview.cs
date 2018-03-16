@@ -61,10 +61,12 @@ namespace Space.Forms
 
 					dataGridView1.Columns.Clear();
 					dataGridView1.Columns.Add("Moon", "Name");
+					dataGridView1.Columns.Add("Moon", "Population");
 					dataGridView1.Columns.Add("Moon", "Size");
 					dataGridView1.Columns.Add("Moon", "Mass");
+					dataGridView1.Columns.Add("Moon", "Owner");
 					dataGridView1.Columns.Add("Moon", "Guid");
-					dataGridView1.Rows.Add(new string[] { moon.Name, "" + moon.Size, "" + moon.Mass, "" + moon.Guid });
+					dataGridView1.Rows.Add(new string[] { moon.Name, string.Format("{0:0}", moon.Population), "" + moon.Size, "" + moon.Mass, "" + moon.Owner, "" + moon.Guid });
 
 					System.Diagnostics.Debug.WriteLine(moon.Name);
 				}
@@ -72,6 +74,16 @@ namespace Space.Forms
 				if (e.Node.Tag.GetType() == typeof(Planet))
 				{
 					Planet planet = (Planet)e.Node.Tag;
+
+					dataGridView1.Columns.Clear();
+					dataGridView1.Columns.Add("Planet", "Name");
+					dataGridView1.Columns.Add("Planet", "Population");
+					dataGridView1.Columns.Add("Planet", "Size");
+					dataGridView1.Columns.Add("Planet", "Mass");
+					dataGridView1.Columns.Add("Planet", "Owner");
+					dataGridView1.Columns.Add("Planet", "Guid");
+					dataGridView1.Rows.Add(new string[] { planet.Name, string.Format("{0:0}", planet.Population), "" + planet.Size, "" + planet.Mass, "" + planet.Owner, "" + planet.Guid });
+
 					System.Diagnostics.Debug.WriteLine(planet.Name);
 				}
 
@@ -81,7 +93,38 @@ namespace Space.Forms
 					System.Diagnostics.Debug.WriteLine(sys.Guid);
 				}
 
+				if (e.Node.Text == "Planets")
+				{
+					string s = (string)e.Node.Tag;
+
+
+					dataGridView1.Columns.Clear();
+					dataGridView1.Columns.Add("Planet", "Name");
+					dataGridView1.Columns.Add("Planet", "Population");
+					dataGridView1.Columns.Add("Planet", "Size");
+					dataGridView1.Columns.Add("Planet", "Mass");
+					dataGridView1.Columns.Add("Planet", "Owner");
+					dataGridView1.Columns.Add("Planet", "Guid");
+
+					if (s == "planets")
+					{
+						foreach (var system in Game.Systems)
+						{
+							foreach (var planet in system.Planets)
+							{
+								dataGridView1.Rows.Add(new string[] { planet.Name, string.Format("{0:0}", planet.Population), "" + planet.Size, "" + planet.Mass, "" + planet.Owner, "" + planet.Guid });
+
+							}
+						}
+					}
+				}
+
 			}
+		}
+
+		private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+		{
+
 		}
 	}
 }

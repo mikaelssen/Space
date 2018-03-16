@@ -1,0 +1,17 @@
+﻿Food
+Water
+Oxygen
+Hydrogen
+Steel
+Iron
+Copper
+Tin
+Wood
+Supplies
+Titanium
+Carbon
+Zink
+Gold
+Lead
+Uranium
+Aluminum

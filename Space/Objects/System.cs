@@ -220,9 +220,25 @@ namespace Space.Objects
 		}
 	}
 
-	public class Resource 
+
+	public class ResourceType
 	{
-		public RESOURCETYPE Resourcename { get; set; }
+		public string Resourcename { get; set; }
+
+		public ResourceType() { }
+		public ResourceType(string Name)
+		{
+			Resourcename = Name;
+		}
+
+		public override string ToString()
+		{
+			return Resourcename;
+		}
+	}
+
+	public class Resource : ResourceType
+	{
 		public int Quantity { get; set; }
 		public float Acsessibility { get; set; }
 
@@ -262,9 +278,14 @@ namespace Space.Objects
 
 		public Resource()
 		{
-			Resourcename = 0;
+			Resourcename = string.Empty;
 			Quantity = 0;
 			Acsessibility = 0;
+		}
+
+		public override string ToString()
+		{
+			return Resourcename;
 		}
 	}
 
@@ -335,9 +356,5 @@ namespace Space.Objects
 		{
 
 		}
-	}
-	
-
-	public enum RESOURCETYPE { Critonite, Arkminium, Greberium, Cactuium, Quantinite, Entihnite, Houfium, Katerium, Mikerium, Peterium, Rigelium, Nuterite, zunbillium }
-							//Crito		Arkentosh  Greb		  Cactus	Quantum		Entih	   houfnice Kat		  Mikaelssen Pizzapete rigel	Coconutsales Zunbil
+	}	
 }

@@ -74,6 +74,7 @@
       <DependentUpon>Planet overview.cs</DependentUpon>
     </Compile>
     <Compile Include="Objects\Game.cs" />
+    <Compile Include="Objects\ResourceManager.cs" />
     <Compile Include="Objects\System.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

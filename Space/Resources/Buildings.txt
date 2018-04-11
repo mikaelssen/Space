@@ -1,0 +1,14 @@
+﻿#Buidlings File, This is just where we define all the possible buildings in the entire game
+#We can lock/unlock them with research by just keeping a seperate list for unlocks/researched things
+#Or we can introduce a bool value here. And i'll just hardcode them inn for now.
+#Example
+#Smeltery,1
+#Buidlingname,UnlockedStatus(1yes, 0no)
+
+#Production
+Smeltery,1
+Sawmill,1
+Space Station,0
+PowerPlant,1
+Fuel Production Plant,1
+#End File

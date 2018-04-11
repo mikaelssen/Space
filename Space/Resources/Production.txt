@@ -9,3 +9,6 @@ Sawmill=10,Wood=1,Timber
 #Ore Processing
 Smeltery=3,Copper,1,Tin=1,Bronze
 Smeltery=1,Carbon,2,Iron=1,Steel
+
+#Fuel
+Fuel Production Plant=1,Oil=10,Fuel

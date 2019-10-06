@@ -70,7 +70,6 @@ namespace Space.Objects
 
 		internal static void Click()
 		{
-			SystemManager.UpdateData();
 			Console.WriteLine("I am the sun yes");
 		}
 	}

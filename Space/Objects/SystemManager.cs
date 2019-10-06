@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using LiteDB.Engine;
 using LiteDB;
 using System.Diagnostics;
 using Raylib;
@@ -12,16 +13,22 @@ namespace Space.Objects
 	{
 		public static Random rng = new Random();
 
-		public static LiteDatabase liteDB = new LiteDatabase("./Database.db");
 
-		internal static List<SolarSystem> Systems { get; set; } = new List<SolarSystem>();
+		public static LiteDatabase liteDB;
 
-		public static void NewGame()
+		public List<SolarSystem> Systems { get; set; } = new List<SolarSystem>();
+
+		public void NewGame()
 		{
+			var settings = new EngineSettings { Password = "", Filename = "./Database.db" };
+			var db = new LiteEngine(settings);
+			if (db != null) liteDB = new LiteDatabase(db);
+
 			Systems = new List<SolarSystem>
 			{
 				NewSystem()
 			};
+
 			liteDB.DropCollection("systems");
 			liteDB.GetCollection<SolarSystem>("systems").Insert(Systems);
 
@@ -31,7 +38,7 @@ namespace Space.Objects
 			//col.EnsureIndex(x => x.Id); //sets ID to track
 		}
 
-		public static void LoadGame()
+		public void LoadGame()
 		{
 
 			//TODO Seperate drawing and objects. so objects don't contain color data and what not, and this is fine.
@@ -41,13 +48,13 @@ namespace Space.Objects
 
 		}
 
-		public static void UpdateData()
+		public void UpdateData()
 		{
 			var col = liteDB.GetCollection<SolarSystem>("systems");
 			col.Update(Systems);
 		}
 
-		internal static void Update(int ticksize = 1)
+		internal void Update(int ticksize = 1)
 		{
 			foreach (var Sys in Systems)
 			{

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Raylib;
 using R = Raylib.Raylib;
 using LiteDB;
+using System.Diagnostics;
 
 namespace Space
 {
@@ -22,6 +23,11 @@ namespace Space
 
 		static readonly public Random rng = new Random();
 		public Objects.SystemManager sys = new Objects.SystemManager();
+
+		int ticksize = 1;
+		int tickrate = 10, currenttickrate;
+		long tickmicros;
+		Stopwatch ticktimer = new Stopwatch();
 
 		/// <summary>
 		/// Main loop
@@ -49,14 +55,19 @@ namespace Space
 			//basic init of raylib
 			R.InitWindow(ScreenWidth, ScreenHeight, "Space");
 			R.SetTargetFPS(TargetFps);
-			
+
+			if (sys.Systems.Count <= 0)
+				sys.NewGame();
+
+
 			//TODO: Translate SFMLWindow into raylib window, and move SystemManage (previously game.cs) into this logic.
 
 		}
 
 		private void Update()
 		{
-		
+
+			R.SetWindowTitle(string.Format("ticksize = {0}, tickrate {4}({5})  year {1}  day {2}  hour {3}", ticksize, Globals.Globals.Date.GetYear(), Globals.Globals.Date.GetDay(), Globals.Globals.Date.GetHour(), tickrate, currenttickrate));
 		}
 
 		private void Draw()

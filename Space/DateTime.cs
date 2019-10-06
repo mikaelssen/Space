@@ -5,8 +5,8 @@
 	/// </summary>
 	public class DateTime
 	{
-		private static int YearLength	= 8760;
-		private static int DayLenght	= 24;
+		private static readonly int YearLength	= 8760;
+		private static readonly int DayLenght	= 24;
 		private double date;
 
 		//property manager

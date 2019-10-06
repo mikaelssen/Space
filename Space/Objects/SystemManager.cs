@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using LiteDB;
 using System.Diagnostics;
+using Raylib;
+using R = Raylib.Raylib;
+
 namespace Space.Objects
 {
-	public static class Game
+	public class SystemManager
 	{
 		public static Random rng = new Random();
 
@@ -31,7 +34,7 @@ namespace Space.Objects
 		public static void LoadGame()
 		{
 
-			//TODO FIX DRAWABLE ACSESS ERROR WHEN LOADING. WILL TAKE A LOT OF WORK, MIK TASK
+			//TODO Seperate drawing and objects. so objects don't contain color data and what not, and this is fine.
 			Systems = new List<SolarSystem>();
 			Systems =  liteDB.GetCollection<SolarSystem>("systems").FindAll().ToList();
 			Debug.WriteLine($"Loaded systems {Systems.Count()}");
@@ -67,8 +70,8 @@ namespace Space.Objects
                     }
 					planet.Bearing = bearing;
                 
-					planet.Position[0] = (float)(orbit/100 * Math.Sin(bearing * (Math.PI / 180.0))); //x
-					planet.Position[1] = (float)(orbit/100 * Math.Cos(bearing * (Math.PI / 180.0))); //y
+					planet.Position.x = (float)(orbit/100 * Math.Sin(bearing * (Math.PI / 180.0))); //x
+					planet.Position.y = (float)(orbit/100 * Math.Cos(bearing * (Math.PI / 180.0))); //y
                     //Console.WriteLine(planet.Position[0]);
 
                     foreach (var moon in planet.Moons)
@@ -83,8 +86,8 @@ namespace Space.Objects
 						if (moonbearing > 360) { moonbearing =moonbearing%360; }
 						moon.Bearing = moonbearing;
 
-						moon.Position[0] = planet.Position[0] + (float)(moonorbit/2500 * Math.Sin(moonbearing * (Math.PI / 180.0))); //x
-						moon.Position[1] = planet.Position[1] + (float)(moonorbit/2500 * Math.Cos(moonbearing * (Math.PI / 180.0))); //y
+						moon.Position.x = planet.Position.x + (float)(moonorbit/2500 * Math.Sin(moonbearing * (Math.PI / 180.0))); //x
+						moon.Position.y = planet.Position.y + (float)(moonorbit/2500 * Math.Cos(moonbearing * (Math.PI / 180.0))); //y
 					}
 				}
 				
@@ -176,7 +179,7 @@ namespace Space.Objects
 			JumpPoint point = new JumpPoint()
 			{
 				Name = $"< {a.Id} >-< {b.Id} >",
-				Position = new int[] { rng.Next(-2000, 2000), rng.Next(-2000, 2000) },
+				Position = new Vector2(rng.Next(-2000, 2000), rng.Next(-2000, 2000)),
 				DestinationIDs = new Int32[] { a.Id, b.Id }
 			};
 			a.JumpPoints.Add(point);

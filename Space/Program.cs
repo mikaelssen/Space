@@ -7,7 +7,9 @@ namespace Space
 	{
 		static void Main()
 		{
-			Application.Run();
+			//setup the non static game enviorment.
+			Game g = new Game();
+			g.Run();
 		}
 	}
 }

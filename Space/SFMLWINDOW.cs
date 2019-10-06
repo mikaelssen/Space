@@ -3,10 +3,8 @@ using Space.Globals;
 using System;
 using System.Threading;
 using System.Diagnostics;
-using SFML.Graphics;
-using SFML.System;
-using SFML.Window;
 
+/*
 class SFMLWindow
 {
 
@@ -263,7 +261,7 @@ class SFMLWindow
 				Position = new Vector2f(asteroid.Position[0], asteroid.Position[1]),
 				Origin = new Vector2f(asteroid.Position[0], asteroid.Position[1])
 			});
-		}*/
+		}
 
 
 	}
@@ -281,3 +279,4 @@ public class DrawingSurface : System.Windows.Forms.Control
 		//base.OnPaintBackground(pevent);
 	}
 }
+*/

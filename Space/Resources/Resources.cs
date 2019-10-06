@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
-using SFML.Graphics;
+using Raylib;
+using R = Raylib.Raylib;
 
 namespace Space.Resources
 {
@@ -10,6 +11,6 @@ namespace Space.Resources
 	{
 		static public Random rng = new Random();
 		static public List<string> Names = File.ReadAllLines("./Resources/Names.txt").ToList();
-		static public Font Font = new Font("./Resources/Barrio-Regular.otf");
+		static public Font Font = R.LoadFont("./Resources/Barrio-Regular.otf");
 	}
 }

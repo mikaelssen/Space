@@ -7,12 +7,11 @@ namespace Space.Objects
 {
 	public static class Game
 	{
-		private static List<SolarSystem> systems = new List<SolarSystem>();
 		public static Random rng = new Random();
 
 		public static LiteDatabase liteDB = new LiteDatabase("./Database.db");
 
-		internal static List<SolarSystem> Systems { get => systems; set => systems = value; }
+		internal static List<SolarSystem> Systems { get; set; } = new List<SolarSystem>();
 
 		public static void NewGame()
 		{
@@ -20,9 +19,8 @@ namespace Space.Objects
 			{
 				NewSystem()
 			};
-
 			liteDB.DropCollection("systems");
-			liteDB.GetCollection<SolarSystem>("systems").Insert(systems);
+			liteDB.GetCollection<SolarSystem>("systems").Insert(Systems);
 
 
 			//LoadGame(); 
@@ -43,12 +41,12 @@ namespace Space.Objects
 		public static void UpdateData()
 		{
 			var col = liteDB.GetCollection<SolarSystem>("systems");
-			col.Update(systems);
+			col.Update(Systems);
 		}
 
 		internal static void Update(int ticksize = 1)
 		{
-			foreach (var Sys in systems)
+			foreach (var Sys in Systems)
 			{
 				
 				foreach (var planet in Sys.Planets)

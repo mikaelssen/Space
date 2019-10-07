@@ -93,8 +93,8 @@ namespace Space.Objects
 						if (moonbearing > 360) { moonbearing =moonbearing%360; }
 						moon.Bearing = moonbearing;
 
-						moon.Position.x = planet.Position.x + (float)(moonorbit/2500 * Math.Sin(moonbearing * (Math.PI / 180.0))); //x
-						moon.Position.y = planet.Position.y + (float)(moonorbit/2500 * Math.Cos(moonbearing * (Math.PI / 180.0))); //y
+						moon.Position.x = planet.Position.x + (float)(moonorbit/20000 * Math.Sin(moonbearing * (Math.PI / 180.0))); //x
+						moon.Position.y = planet.Position.y + (float)(moonorbit/20000 * Math.Cos(moonbearing * (Math.PI / 180.0))); //y
 					}
 				}
 				

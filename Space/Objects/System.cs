@@ -188,7 +188,8 @@ namespace Space.Objects
 
 		public override void Draw()
 		{
-			R.DrawCircle((int)Position.x, (int)Position.y, (DistanceFromPlanet/2500)/16, Color.GREEN);
+            float Radius = Size / 50;
+            R.DrawCircle((int)Position.x, (int)Position.y, Radius, Color.GREEN);
 		}
 
 		internal void Click()

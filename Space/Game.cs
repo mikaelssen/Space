@@ -102,24 +102,30 @@ namespace Space
 			if (R.IsKeyDown(KeyboardKey.KEY_D))
 				cameratarget = new Vector2(cameratarget.x - speed, cameratarget.y);
 
-			//zoom
-			camera.zoom += (R.GetMouseWheelMove() * 0.05f);
+            //zoom
+            float oldzoom = camera.zoom;
+			camera.zoom += ((float)R.GetMouseWheelMove() * 0.1f * camera.zoom);
 
-			//tick manipulation
-			if (R.IsKeyDown(KeyboardKey.KEY_T))
+            //tick manipulation
+            if (R.IsKeyDown(KeyboardKey.KEY_T))
 				ticksize++;
 			if (R.IsKeyDown(KeyboardKey.KEY_G))
 				ticksize--;
 
 			//move camera
+            
+
 			camera.target = cameratarget;
-		}
+            camera.offset = new Vector2(R.GetScreenWidth() / 2, R.GetScreenHeight() / 2);
+
+
+        }
 
 		private void Draw()
 		{
 			Objects.SolarSystem s = sys.Systems[0];
 
-			R.BeginDrawing();
+            R.BeginDrawing();
 			R.ClearBackground(Color.BLACK);
 
 			R.BeginMode2D(camera);

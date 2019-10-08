@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Space.Objects.Dynamic.Ships;
+using Space.Objects.Fixed.Body;
+using Space.Managers;
 using Raylib;
 using R = Raylib.Raylib;
 using LiteDB;
@@ -23,7 +26,7 @@ namespace Space
 
 
 		static readonly public Random rng = new Random();
-		public Objects.SystemManager sys = new Objects.SystemManager();
+		public SystemManager sys = new SystemManager();
 
 		int ticksize = 1;
 		int tickrate = 10, currenttickrate;
@@ -123,22 +126,34 @@ namespace Space
 
 		private void Draw()
 		{
-			Objects.SolarSystem s = sys.Systems[0];
+			SolarSystem s = sys.Systems[0];
 
             R.BeginDrawing();
 			R.ClearBackground(Color.BLACK);
 
 			R.BeginMode2D(camera);
-			s.Star.Draw();
 
 
+			float Radius = 0;
+
+			Radius = s.Star.Size / 5000;
+			R.DrawCircle(0, 0, Radius, Color.YELLOW);
 
 			for (int i = 0; i < s.Planets.Count; i++)
 			{
-				s.Planets[i].Draw();
+				Radius = s.Planets[i].Size / 2500;
+				R.DrawCircle(
+					(int)s.Planets[i].Position.x,
+					(int)s.Planets[i].Position.y,
+					Radius, Color.BLUE);
+
 				for (int m = 0; m < s.Planets[i].Moons.Count; m++)
 				{
-					s.Planets[i].Moons[m].Draw();
+					Radius = s.Planets[i].Moons[m].Size / 50;
+					R.DrawCircle(
+						(int)s.Planets[i].Moons[m].Position.x,
+						(int)s.Planets[i].Moons[m].Position.y,
+						Radius, Color.GREEN);
 				}
 			}
 

@@ -75,12 +75,21 @@
     <Compile Include="Bindings\Raymath.cs" />
     <Compile Include="DateTime.cs" />
     <Compile Include="Game.cs" />
-    <Compile Include="Objects\SystemManager.cs" />
-    <Compile Include="Objects\System.cs" />
+    <Compile Include="Objects\Fixed\Body\Asteroid.cs" />
+    <Compile Include="Objects\Dynamic\Dynamic.cs" />
+    <Compile Include="Objects\Fixed\Fixed.cs" />
+    <Compile Include="Objects\Dynamic\Ships\Ship.cs" />
+    <Compile Include="Managers\SolarSystem.cs" />
+    <Compile Include="Objects\Fixed\Body\Star.cs" />
+    <Compile Include="Objects\Fixed\Body\Planet.cs" />
+    <Compile Include="Objects\Fixed\Body\Moon.cs" />
+    <Compile Include="Objects\Fixed\Structure\Structure.cs" />
+    <Compile Include="Managers\SystemManager.cs" />
+    <Compile Include="Logic\Resource.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Globals.cs" />
-    <Compile Include="Resources\Resources.cs" />
+    <Compile Include="Src\Resources.cs" />
     <Compile Include="SFMLWINDOW.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -101,7 +110,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="Resources\Barrio-Regular.otf">
+    <None Include="Src\Barrio-Regular.otf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -112,12 +121,15 @@
     <None Include="raylib.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Content Include="Resources\Names.txt">
+    <Content Include="Src\Names.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="raylib.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Items\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

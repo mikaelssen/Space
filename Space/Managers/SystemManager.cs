@@ -6,13 +6,20 @@ using LiteDB;
 using System.Diagnostics;
 using Raylib;
 using R = Raylib.Raylib;
+using Space.Objects.Fixed.Body;
+using Space.Objects.Fixed.Structure;
+using Space.Objects.Dynamic.Ships;
+using Space.Logic;
 
-namespace Space.Objects
+namespace Space.Managers
 {
+
+	/// <summary>
+	/// Manages all the solarsystems.
+	/// </summary>
 	public class SystemManager
 	{
 		public static Random rng = new Random();
-
 
 		public static LiteDatabase liteDB;
 
@@ -121,7 +128,7 @@ namespace Space.Objects
 				//planet
 				Planet planet = new Planet
 				{
-					Name = Names.GetRandomName(),
+					Name = Globals.Globals.GetRandomName(),
 					Size = rng.Next(2500, 140000), // Between pluto and juptier size
 					Resources = new List<Resource>(),
 					Bearing = rng.Next(0, 360),
@@ -142,7 +149,7 @@ namespace Space.Objects
 				{
 					Moon moon = new Moon()
 					{
-						Name = Names.GetRandomName(),
+						Name = Globals.Globals.GetRandomName(),
 						Size = rng.Next(100, 1500),
 						Density = rng.Next(3000, 5000),
 						Bearing = rng.Next(0, 360)
@@ -176,11 +183,13 @@ namespace Space.Objects
 			return system;
 		}
 
+		/// we'll get back to this later
 		/// <summary>
 		/// Generate a jump point between Sys A and Sys B
 		/// </summary>
 		/// <param name="a">Starting System</param>
 		/// <param name="b">Ending System</param>
+		/*
 		private static void NewJumpoints(SolarSystem a, SolarSystem b)
 		{
 			JumpPoint point = new JumpPoint()
@@ -191,7 +200,7 @@ namespace Space.Objects
 			};
 			a.JumpPoints.Add(point);
 			b.JumpPoints.Add(point);
-		}
+		}*/
 
 	}
 }

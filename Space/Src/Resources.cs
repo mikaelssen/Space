@@ -10,7 +10,7 @@ namespace Space.Resources
 	static public class Resources
 	{
 		static public Random rng = new Random();
-		static public List<string> Names = File.ReadAllLines("./Resources/Names.txt").ToList();
-		static public Font Font = R.LoadFont("./Resources/Barrio-Regular.otf");
+		static public List<string> Names = File.ReadAllLines("./Src/Names.txt").ToList();
+		static public Font Font = R.LoadFont("./Src/Barrio-Regular.otf");
 	}
 }

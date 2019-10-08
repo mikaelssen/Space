@@ -67,6 +67,7 @@ namespace Space
                 target = cameratarget,
                 zoom = 1f,
                 rotation = 0.0f,
+				
             };
 
 			ticktimer.Start();
@@ -77,6 +78,7 @@ namespace Space
 
 		}
 
+	
 		private void Update()
 		{
 			Input();
@@ -109,8 +111,10 @@ namespace Space
 				cameratarget = new Vector2(cameratarget.x - speed, cameratarget.y);
 
             //zoom
+
+			
             float oldzoom = camera.zoom;
-			camera.zoom += ((float)R.GetMouseWheelMove() * 0.1f * camera.zoom);
+			camera.zoom += (R.GetMouseWheelMove() * 0.1f * camera.zoom);
 
             //tick manipulation
             if (R.IsKeyDown(KeyboardKey.KEY_T))
@@ -123,11 +127,10 @@ namespace Space
 			if (R.IsKeyPressed(KeyboardKey.KEY_Q))
 				sys.NewGame(); //this is hacky as fuck :)
 
-
 			//move camera
 			camera.target = cameratarget;
-
 			camera.offset = cameratarget + new Vector2(R.GetScreenWidth() / 2, R.GetScreenHeight() / 2); //camera target is 2 buggy for me to use reliably or i'm to stupid -Littleme
+
             //camera.offset = new Vector2(R.GetScreenWidth() / 2, R.GetScreenHeight() / 2);
 
         }
@@ -181,9 +184,14 @@ namespace Space
 			//asteroids, we don't update them yet so no point in drawing, they're just being generated 
 			//for (int a = 0; a < s.Asteroids.Count; a++)
 			//{
-				//R.DrawCircleV(s.Asteroids[a].Position, 30, Color.GOLD);
+			//R.DrawCircleV(s.Asteroids[a].Position, 30, Color.GOLD);
 			//}
 
+			//Lets find this god damn mouse
+			Vector2 pos = R.GetWorldToScreen2D(new Vector2(R.GetMouseX(), R.GetMouseY()), camera);
+			R.DrawCircle((int)pos.x, (int)pos.y, 50, Color.BEIGE);
+
+			//R.GetWorldToScreen(new Vector3(R.GetMouseX(), R.GetMouseY(), 0), camera);
 
 			R.EndMode2D();
 

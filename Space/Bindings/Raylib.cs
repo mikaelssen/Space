@@ -869,17 +869,58 @@ namespace Raylib
         [DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern Ray GetMouseRay(Vector2 mousePosition, Camera3D camera);
 
-        // Returns the screen space position for a 3d world space position
-        [DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern Vector2 GetWorldToScreen(Vector3 position, Camera3D camera);
+		// Returns the screen space position for a 3d world space position
+		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern Vector2 GetWorldToScreen(Vector3 position, Camera3D camera);
 
-        // Returns camera transform matrix (view matrix)
-        [DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		// Returns the screen space position for a 2d world space position
+		public static Vector2 GetWorldToScreen2D(Vector2 position, Camera2D camera)
+		{
+			Matrix matCamera = GetCameraMatrix2D(camera);
+			Vector3 transform = Vector3Transform(new Vector3(position.x, position.y, 0), matCamera);
+
+			return new Vector2(transform.x, transform.y);
+		}
+
+
+		public static Matrix GetCameraMatrix2D(Camera2D camera)
+		{
+			Matrix matTransform = new Matrix();
+			// The camera in world-space is set by
+			//   1. Move it to target
+			//   2. Rotate by -rotation and scale by (1/zoom)
+			//      When setting higher scale, it's more intuitive for the world to become bigger (= camera become smaller),
+			//      not for the camera getting bigger, hence the invert. Same deal with rotation.
+			//   3. Move it by (-offset);
+			//      Offset defines target transform relative to screen, but since we're effectively "moving" screen (camera)
+			//      we need to do it into opposite direction (inverse transform)
+
+			// Having camera transform in world-space, inverse of it gives the modelview transform.
+			// Since (A*B*C)' = C'*B'*A', the modelview is
+			//   1. Move to offset
+			//   2. Rotate and Scale
+			//   3. Move by -target
+			Matrix matOrigin = MatrixTranslate(-camera.target.x, -camera.target.y, 0.0f);
+			Matrix matRotation = MatrixRotate(new Vector3(0.0f, 0.0f, 1.0f), camera.rotation * (float)(Math.PI / 180.0f));
+			Matrix matScale = MatrixScale(camera.zoom, camera.zoom, 1.0f);
+			Matrix matTranslation = MatrixTranslate(camera.offset.x, camera.offset.y, 0.0f);
+
+			matTransform = MatrixMultiply(MatrixMultiply(matOrigin, MatrixMultiply(matScale, matRotation)), matTranslation);
+
+			return matTransform;
+		}
+
+		// Returns the world space position for a 2d camera screen space position
+		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern Vector2 GetScreenToWorld2D(Vector2 position, Camera2D camera);
+
+		// Returns camera transform matrix (view matrix)
+		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern Matrix GetCameraMatrix(Camera3D camera);
 
-        // timing-related functions
-        // Set target FPS (maximum)
-        [DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		// timing-related functions
+		// Set target FPS (maximum)
+		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void SetTargetFPS(int fps);
 
         // Returns current FPS

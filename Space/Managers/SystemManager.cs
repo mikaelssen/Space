@@ -116,7 +116,7 @@ namespace Space.Managers
 		/// <returns>System</returns>
 		private static SolarSystem NewSystem()
 		{
-            Globals.Globals.Date = new Globals.DateTime();
+            Globals.Globals.Date = new Logic.DateTime();
 			SolarSystem system = new SolarSystem
 			{
 				Star = new Star()

@@ -10,6 +10,7 @@ using Raylib;
 using R = Raylib.Raylib;
 using LiteDB;
 using System.Diagnostics;
+using Space.Logic;
 
 namespace Space
 {
@@ -67,7 +68,7 @@ namespace Space
 			camera.zoom = 1f;
 
 			ticktimer.Start();
-			Globals.Globals.Date = new Globals.DateTime();
+			Globals.Globals.Date = new Logic.DateTime();
 
 			if (sys.Systems.Count <= 0)
 				sys.NewGame();

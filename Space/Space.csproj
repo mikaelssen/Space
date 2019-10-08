@@ -73,7 +73,7 @@
     <Compile Include="Bindings\Raygui.cs" />
     <Compile Include="Bindings\Raylib.cs" />
     <Compile Include="Bindings\Raymath.cs" />
-    <Compile Include="DateTime.cs" />
+    <Compile Include="Logic\DateTime.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Objects\Fixed\Body\Asteroid.cs" />
     <Compile Include="Objects\Dynamic\Dynamic.cs" />

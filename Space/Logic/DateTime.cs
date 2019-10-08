@@ -1,4 +1,4 @@
-﻿namespace Space.Globals
+﻿namespace Space.Logic
 {
 	/// <summary>
 	/// Suggested replacement for double Date. may seem more complicated but neatifies code later when calling time estimates, it could also hold statics for time.

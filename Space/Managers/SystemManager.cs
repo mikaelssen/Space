@@ -29,14 +29,22 @@ namespace Space.Managers
 		{
 			var settings = new EngineSettings { Password = "", Filename = "./Database.db" };
 			var db = new LiteEngine(settings);
-			if (db != null) liteDB = new LiteDatabase(db);
+
+			if (db != null && liteDB == null) liteDB = new LiteDatabase(db);
 
 			Systems = new List<SolarSystem>
 			{
 				NewSystem()
 			};
 
-			liteDB.DropCollection("systems");
+			try
+			{
+				liteDB.DropCollection("systems");
+			}
+			catch (Exception e) 
+			{
+				Console.WriteLine(e.Message);
+			}
 			liteDB.GetCollection<SolarSystem>("systems").Insert(Systems);
 
 
@@ -169,16 +177,16 @@ namespace Space.Managers
 
 			//asteroid generation
 			//TODO this asteroid stuff
-			/*for (int i = 0; i < rng.Next(0,0); i++)
+			for (int i = 0; i < rng.Next(0,200); i++)
 			{
 				Asteroid aster = new Asteroid
 				{
-					Name = Names.GetRandomName(),					
-					Size = rng.Next(1, 20),
-					Position = new int[] { rng.Next(-500, 500), rng.Next(-500, 500) }
+					Name = Globals.Globals.GetRandomName(),
+					Size = rng.Next(1, 70),
+					Position = new Vector2(rng.Next(-10000,20000), rng.Next(-10000, 20000))
 				};
 				system.Asteroids.Add(aster);
-			}*/
+			}
 
 			return system;
 		}

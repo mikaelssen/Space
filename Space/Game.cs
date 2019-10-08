@@ -118,9 +118,12 @@ namespace Space
 			if (R.IsKeyDown(KeyboardKey.KEY_G))
 				ticksize--;
 
-			//move camera
-            
+			//space manipulation
 
+			if (R.IsKeyPressed(KeyboardKey.KEY_Q))
+				sys.NewGame(); //this is hacky as fuck :)
+
+			//move camera
 			camera.target = cameratarget;
             camera.offset = new Vector2(R.GetScreenWidth() / 2, R.GetScreenHeight() / 2);
 
@@ -151,9 +154,8 @@ namespace Space
 
 				//planet itself
 				Radius = s.Planets[i].Size / 2500;
-				R.DrawCircle(
-					(int)s.Planets[i].Position.x,
-					(int)s.Planets[i].Position.y,
+				R.DrawCircleV(
+					s.Planets[i].Position,
 					Radius, Color.BLUE);
 
 				for (int m = 0; m < s.Planets[i].Moons.Count; m++)
@@ -167,12 +169,17 @@ namespace Space
 
 					//moon itself
 					Radius = s.Planets[i].Moons[m].Size / 50;
-					R.DrawCircle(
-						(int)s.Planets[i].Moons[m].Position.x,
-						(int)s.Planets[i].Moons[m].Position.y,
+					R.DrawCircleV(
+						s.Planets[i].Moons[m].Position,
 						Radius, Color.GREEN);
 				}
 			}
+
+			//asteroids, we don't update them yet so no point in drawing, they're just being generated 
+			//for (int a = 0; a < s.Asteroids.Count; a++)
+			//{
+				//R.DrawCircleV(s.Asteroids[a].Position, 30, Color.GOLD);
+			//}
 
 
 			R.EndMode2D();

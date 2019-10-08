@@ -25,5 +25,5 @@ namespace Space.Objects.Fixed.Body
 			Console.WriteLine("I am the sun yes");
 		}
 	}
-							 //Arkentosh  Greb		 Cactus	   Quantum	   Entih	  houfnice,Kat		 Mikaelssen Pizzapete rigel	   Coconutsales Zunbil   littleme02
+							
 }

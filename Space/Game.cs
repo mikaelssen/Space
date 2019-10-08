@@ -60,14 +60,14 @@ namespace Space
 			//basic init of raylib
 			R.InitWindow(ScreenWidth, ScreenHeight, "Space");
 			R.SetTargetFPS(TargetFps);
+            cameratarget = new Vector2(0, 0);
 
-			cameratarget = new Vector2(0, 0);
-
-			camera = new Camera2D
-			{
-				target = cameratarget,
-				zoom = 1f
-			};
+            camera = new Camera2D
+            {
+                target = cameratarget,
+                zoom = 1f,
+                rotation = 0.0f,
+            };
 
 			ticktimer.Start();
 			Globals.Globals.Date = new Logic.DateTime();
@@ -121,8 +121,8 @@ namespace Space
 			//move camera
             
 
-			camera.target = cameratarget;
-            camera.offset = new Vector2(R.GetScreenWidth() / 2, R.GetScreenHeight() / 2);
+			camera.offset = cameratarget + new Vector2(R.GetScreenWidth() / 2, R.GetScreenHeight() / 2); //camera target is 2 buggy for me to use reliably or i'm to stupid -Littleme
+            //camera.offset = new Vector2(R.GetScreenWidth() / 2, R.GetScreenHeight() / 2);
 
 
         }
@@ -174,8 +174,18 @@ namespace Space
 				}
 			}
 
+            R.EndMode2D();
 
-			R.EndMode2D();
+            R.DrawText(camera.target.ToString(), 20, 0, 20, Color.WHITE);
+            R.DrawText(camera.offset.ToString(), 20, 30, 20, Color.WHITE);
+            R.DrawText(R.GetMouseX().ToString(), 20, 60, 20, Color.WHITE);
+            R.DrawText(R.GetMouseY().ToString(), 20, 90, 20, Color.WHITE);
+            R.DrawText((R.GetMouseX() - R.GetScreenWidth() / 2).ToString(), 80, 60, 20, Color.WHITE);
+            R.DrawText((R.GetMouseY() - R.GetScreenHeight() / 2).ToString(), 80, 90, 20, Color.WHITE);
+            R.DrawText(((R.GetMouseX() - R.GetScreenWidth() / 2) / camera.zoom).ToString(), 160, 60, 20, Color.WHITE);
+            R.DrawText(((R.GetMouseY() - R.GetScreenHeight() / 2) / camera.zoom).ToString(), 160, 90, 20, Color.WHITE);
+            R.DrawText(camera.zoom.ToString(), 20, 120, 20, Color.WHITE);
+            
 			R.EndDrawing();
 		}
 	}

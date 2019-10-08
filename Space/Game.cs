@@ -123,15 +123,12 @@ namespace Space
 			if (R.IsKeyPressed(KeyboardKey.KEY_Q))
 				sys.NewGame(); //this is hacky as fuck :)
 
-<<<<<<< HEAD
+
 			//move camera
 			camera.target = cameratarget;
-            camera.offset = new Vector2(R.GetScreenWidth() / 2, R.GetScreenHeight() / 2);
-=======
+
 			camera.offset = cameratarget + new Vector2(R.GetScreenWidth() / 2, R.GetScreenHeight() / 2); //camera target is 2 buggy for me to use reliably or i'm to stupid -Littleme
             //camera.offset = new Vector2(R.GetScreenWidth() / 2, R.GetScreenHeight() / 2);
->>>>>>> 2ae41e2f79f543e79e4d031d5ccf37443a566a2b
-
 
         }
 

@@ -77,7 +77,7 @@ namespace Space.Managers
 
                     double circumference = planet.Circumference;
 
-                    bearing = bearing + planet.BearingDV * ticksize;
+                    bearing += planet.BearingDV * ticksize;
 					if (bearing > 360)
                     {
                         bearing = bearing%360;

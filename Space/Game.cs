@@ -63,9 +63,11 @@ namespace Space
 
 			cameratarget = new Vector2(0, 0);
 
-			camera = new Camera2D();
-			camera.target = cameratarget;
-			camera.zoom = 1f;
+			camera = new Camera2D
+			{
+				target = cameratarget,
+				zoom = 1f
+			};
 
 			ticktimer.Start();
 			Globals.Globals.Date = new Logic.DateTime();
@@ -77,7 +79,7 @@ namespace Space
 
 		private void Update()
 		{
-			input();
+			Input();
 
 			tickmicros = (ticktimer.ElapsedTicks / (Stopwatch.Frequency / (1000L * 1000L))); //convert to microseconds using timeticks and processor frequency
 			R.SetWindowTitle(string.Format("ticksize = {0}, tickrate {4}({5})  year {1}  day {2}  hour {3}",
@@ -91,7 +93,7 @@ namespace Space
 				Globals.Globals.Date.Date += ticksize; // update date
 			}
 		}
-		private void input()
+		private void Input()
 		{
 			int speed = 10;
 
@@ -142,6 +144,12 @@ namespace Space
 
 			for (int i = 0; i < s.Planets.Count; i++)
 			{
+
+				//orbit
+				Radius = s.Planets[i].DistanceFromStar / 100;
+				R.DrawCircleLines(0, 0, Radius, Color.RED);
+
+				//planet itself
 				Radius = s.Planets[i].Size / 2500;
 				R.DrawCircle(
 					(int)s.Planets[i].Position.x,
@@ -150,6 +158,14 @@ namespace Space
 
 				for (int m = 0; m < s.Planets[i].Moons.Count; m++)
 				{
+					//orbit
+					Radius = s.Planets[i].Moons[m].DistanceFromPlanet / 20000;
+					R.DrawCircleLines(
+						(int)s.Planets[i].Position.x,
+						(int)s.Planets[i].Position.y,
+						Radius, Color.YELLOW);
+
+					//moon itself
 					Radius = s.Planets[i].Moons[m].Size / 50;
 					R.DrawCircle(
 						(int)s.Planets[i].Moons[m].Position.x,

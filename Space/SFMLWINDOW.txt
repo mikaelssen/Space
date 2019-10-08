@@ -1,10 +1,5 @@
-﻿using Space.Objects;
-using Space.Globals;
-using System;
-using System.Threading;
-using System.Diagnostics;
+﻿This is an old file, we use it to re implement missing things if there's any, will be deleted later.
 
-/*
 class SFMLWindow
 {
 
@@ -279,4 +274,3 @@ public class DrawingSurface : System.Windows.Forms.Control
 		//base.OnPaintBackground(pevent);
 	}
 }
-*/

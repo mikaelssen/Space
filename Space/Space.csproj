@@ -90,7 +90,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="Src\Resources.cs" />
-    <Compile Include="SFMLWINDOW.cs" />
+    <Content Include="SFMLWINDOW.txt" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

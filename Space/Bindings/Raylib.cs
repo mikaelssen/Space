@@ -873,14 +873,19 @@ namespace Raylib
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern Vector2 GetWorldToScreen(Vector3 position, Camera3D camera);
 
-		// Returns the screen space position for a 2d world space position
+		// Returns the screen space position for a 3d world space position
+		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern Vector2 GetWorldToScreen2D(Vector2 position, Camera2D camera);
+
+		// Returns the screen space position for a 2d world space position 
+		/*
 		public static Vector2 GetWorldToScreen2D(Vector2 position, Camera2D camera)
 		{
 			Matrix matCamera = GetCameraMatrix2D(camera);
 			Vector3 transform = Vector3Transform(new Vector3(position.x, position.y, 0), matCamera);
 
 			return new Vector2(transform.x, transform.y);
-		}
+		}*/
 
 
 		public static Matrix GetCameraMatrix2D(Camera2D camera)

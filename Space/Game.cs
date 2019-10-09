@@ -188,7 +188,7 @@ namespace Space
 			//}
 
 			//Lets find this god damn mouse
-			Vector2 pos = R.GetWorldToScreen2D(new Vector2(R.GetMouseX(), R.GetMouseY()), camera);
+			Vector2 pos = R.GetWorldToScreen2D(new Vector2((R.GetMouseX() - R.GetScreenWidth() / 2) / camera.zoom, (R.GetMouseY() - R.GetScreenHeight() / 2) / camera.zoom), camera);
 			R.DrawCircle((int)pos.x, (int)pos.y, 50, Color.BEIGE);
 
 			//R.GetWorldToScreen(new Vector3(R.GetMouseX(), R.GetMouseY(), 0), camera);

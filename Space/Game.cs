@@ -102,22 +102,27 @@ namespace Space
 			//cam movement
 
 			if (R.IsKeyDown(KeyboardKey.KEY_W))
-				cameratarget = new Vector2(cameratarget.x, cameratarget.y + speed);
-			if (R.IsKeyDown(KeyboardKey.KEY_A))
-				cameratarget = new Vector2(cameratarget.x + speed, cameratarget.y);
-			if (R.IsKeyDown(KeyboardKey.KEY_S))
 				cameratarget = new Vector2(cameratarget.x, cameratarget.y - speed);
-			if (R.IsKeyDown(KeyboardKey.KEY_D))
+			if (R.IsKeyDown(KeyboardKey.KEY_A))
 				cameratarget = new Vector2(cameratarget.x - speed, cameratarget.y);
+			if (R.IsKeyDown(KeyboardKey.KEY_S))
+				cameratarget = new Vector2(cameratarget.x, cameratarget.y + speed);
+			if (R.IsKeyDown(KeyboardKey.KEY_D))
+				cameratarget = new Vector2(cameratarget.x + speed, cameratarget.y);
 
             //zoom
 
 			
             float oldzoom = camera.zoom;
-			camera.zoom += (R.GetMouseWheelMove() * 0.1f * camera.zoom);
+			if (R.GetMouseWheelMove() > 0 || R.GetMouseWheelMove() < 0)
+			{
+				Console.WriteLine("k");
+				camera.zoom += (R.GetMouseWheelMove() * 0.1f * camera.zoom);
+				cameratarget = R.GetScreenToWorld2D(R.GetMousePosition(),camera);
+			}
 
-            //tick manipulation
-            if (R.IsKeyDown(KeyboardKey.KEY_T))
+			//tick manipulation
+			if (R.IsKeyDown(KeyboardKey.KEY_T))
 				ticksize++;
 			if (R.IsKeyDown(KeyboardKey.KEY_G))
 				ticksize--;
@@ -129,7 +134,7 @@ namespace Space
 
 			//move camera
 			camera.target = cameratarget;
-			camera.offset = cameratarget + new Vector2(R.GetScreenWidth() / 2, R.GetScreenHeight() / 2); //camera target is 2 buggy for me to use reliably or i'm to stupid -Littleme
+			camera.offset = new Vector2(+ R.GetScreenWidth() / 2, R.GetScreenHeight() / 2); //camera target is 2 buggy for me to use reliably or i'm to stupid -Littleme
 
             //camera.offset = new Vector2(R.GetScreenWidth() / 2, R.GetScreenHeight() / 2);
 
@@ -188,7 +193,7 @@ namespace Space
 			//}
 
 			//Lets find this god damn mouse
-			Vector2 pos = R.GetWorldToScreen2D(new Vector2((R.GetMouseX() - R.GetScreenWidth() / 2) / camera.zoom, (R.GetMouseY() - R.GetScreenHeight() / 2) / camera.zoom), camera);
+			Vector2 pos = R.GetScreenToWorld2D(new Vector2(R.GetMouseX(), R.GetMouseY()), camera);
 			R.DrawCircle((int)pos.x, (int)pos.y, 50, Color.BEIGE);
 
 			//R.GetWorldToScreen(new Vector3(R.GetMouseX(), R.GetMouseY(), 0), camera);

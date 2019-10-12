@@ -11,6 +11,7 @@ using R = Raylib.Raylib;
 using LiteDB;
 using System.Diagnostics;
 using Space.Logic;
+using System.IO;
 
 namespace Space
 {
@@ -33,6 +34,7 @@ namespace Space
 		int tickrate = 10, currenttickrate;
 		long tickmicros;
 		Stopwatch ticktimer = new Stopwatch();
+		Shader shader = new Shader();
 
 		/// <summary>
 		/// Main loop
@@ -54,9 +56,16 @@ namespace Space
 		/// </summary>
 		private void Setup()
 		{
+			Console.WriteLine(Environment.CurrentDirectory);
+			var s = File.ReadAllText(@".\Src\Shader\SunShader.fs");
+			shader = new Shader();
+			//shader = R.LoadShaderCode(null,s) ;
+
+
 			ScreenHeight = 240 * 4;
 			ScreenWidth = 320 * 4;
 			TargetFps = 60;
+
 			//basic init of raylib
 			R.InitWindow(ScreenWidth, ScreenHeight, "Space");
 			R.SetTargetFPS(TargetFps);
@@ -97,10 +106,11 @@ namespace Space
 		}
 		private void Input()
 		{
+
+
 			int speed = 10;
 
 			//cam movement
-
 			if (R.IsKeyDown(KeyboardKey.KEY_W))
 				cameratarget = new Vector2(cameratarget.x, cameratarget.y - speed);
 			if (R.IsKeyDown(KeyboardKey.KEY_A))
@@ -111,14 +121,14 @@ namespace Space
 				cameratarget = new Vector2(cameratarget.x + speed, cameratarget.y);
 
             //zoom
-
-			
             float oldzoom = camera.zoom;
 			if (R.GetMouseWheelMove() > 0 || R.GetMouseWheelMove() < 0)
 			{
-				Console.WriteLine("k");
-				camera.zoom += (R.GetMouseWheelMove() * 0.1f * camera.zoom);
+				//This is not taking into account the screen movement to 'center' the mouse. That's why it's fucky.
+
+				//cameratarget = R.GetScreenToWorld2D(R.GetMousePosition(), camera);
 				cameratarget = R.GetScreenToWorld2D(R.GetMousePosition(),camera);
+				camera.zoom += (R.GetMouseWheelMove() * 0.05f * camera.zoom);
 			}
 
 			//tick manipulation
@@ -133,12 +143,11 @@ namespace Space
 				sys.NewGame(); //this is hacky as fuck :)
 
 			//move camera
-			camera.target = cameratarget;
-			camera.offset = new Vector2(+ R.GetScreenWidth() / 2, R.GetScreenHeight() / 2); //camera target is 2 buggy for me to use reliably or i'm to stupid -Littleme
+			camera.target = cameratarget; //this moves the camera to the set position.
+			camera.offset = new Vector2(R.GetScreenWidth() / 2, R.GetScreenHeight() / 2); //this sets the 'focus' to center.
 
-            //camera.offset = new Vector2(R.GetScreenWidth() / 2, R.GetScreenHeight() / 2);
 
-        }
+		}
 
 		private void Draw()
 		{
@@ -146,14 +155,19 @@ namespace Space
 
             R.BeginDrawing();
 			R.ClearBackground(Color.BLACK);
+			float Radius = 0;
+
+
 
 			R.BeginMode2D(camera);
 
 
-			float Radius = 0;
 
+			//R.BeginShaderMode(shader);
 			Radius = s.Star.Size / 5000;
 			R.DrawCircle(0, 0, Radius, Color.YELLOW);
+			//R.EndShaderMode();
+
 
 			for (int i = 0; i < s.Planets.Count; i++)
 			{
@@ -168,20 +182,24 @@ namespace Space
 					s.Planets[i].Position,
 					Radius, Color.BLUE);
 
-				for (int m = 0; m < s.Planets[i].Moons.Count; m++)
+				//only render moons if you're close enough
+				if (camera.zoom > 1.3)
 				{
-					//orbit
-					Radius = s.Planets[i].Moons[m].DistanceFromPlanet / 20000;
-					R.DrawCircleLines(
-						(int)s.Planets[i].Position.x,
-						(int)s.Planets[i].Position.y,
-						Radius, Color.YELLOW);
+					for (int m = 0; m < s.Planets[i].Moons.Count; m++)
+					{
+						//orbit
+						Radius = s.Planets[i].Moons[m].DistanceFromPlanet / 20000;
+						R.DrawCircleLines(
+							(int)s.Planets[i].Position.x,
+							(int)s.Planets[i].Position.y,
+							Radius, Color.YELLOW);
 
-					//moon itself
-					Radius = s.Planets[i].Moons[m].Size / 50;
-					R.DrawCircleV(
-						s.Planets[i].Moons[m].Position,
-						Radius, Color.GREEN);
+						//moon itself
+						Radius = s.Planets[i].Moons[m].Size / 50;
+						R.DrawCircleV(
+							s.Planets[i].Moons[m].Position,
+							Radius, Color.GREEN);
+					}
 				}
 			}
 
@@ -201,15 +219,10 @@ namespace Space
 			R.EndMode2D();
 
 
-            R.DrawText(camera.target.ToString(), 20, 0, 20, Color.WHITE);
-            R.DrawText(camera.offset.ToString(), 20, 30, 20, Color.WHITE);
-            R.DrawText(R.GetMouseX().ToString(), 20, 60, 20, Color.WHITE);
-            R.DrawText(R.GetMouseY().ToString(), 20, 90, 20, Color.WHITE);
-            R.DrawText((R.GetMouseX() - R.GetScreenWidth() / 2).ToString(), 80, 60, 20, Color.WHITE);
-            R.DrawText((R.GetMouseY() - R.GetScreenHeight() / 2).ToString(), 80, 90, 20, Color.WHITE);
-            R.DrawText(((R.GetMouseX() - R.GetScreenWidth() / 2) / camera.zoom).ToString(), 160, 60, 20, Color.WHITE);
-            R.DrawText(((R.GetMouseY() - R.GetScreenHeight() / 2) / camera.zoom).ToString(), 160, 90, 20, Color.WHITE);
-            R.DrawText(camera.zoom.ToString(), 20, 120, 20, Color.WHITE);
+            R.DrawText("Target: " + camera.target.ToString(), 20, 0, 20, Color.WHITE);
+            R.DrawText("Offset: " + camera.offset.ToString(), 20, 30, 20, Color.WHITE);
+            R.DrawText("MW2SPo: " + R.GetScreenToWorld2D(R.GetMousePosition(),camera).ToString(), 20, 60, 20, Color.WHITE);
+            R.DrawText("  Zoom: " + camera.zoom.ToString(), 20, 120, 20, Color.WHITE);
             
 
 			R.EndDrawing();
